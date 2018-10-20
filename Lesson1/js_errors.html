@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="content">
+  <h2>Welcome to a Page of Errors</h2>
+  <p>In order to get the "You did it" to appear below here, you need to use your Chrome console window, fix the code in an editor, reload, and get the output of each of the problems to appear.</p>
+  <p>Send me a screen shot copy of your console output as "proof."</p>
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+var simple_add = function(arg1, arg2){
+  return arg1 + arg2;
+}
+
+var subtract = function(arg1, arg2) {
+  return arg1 - arg2;
+};
+
+
+var myobject = {
+  cats: 2,
+  dogs: 5,
+  burrowingOwls: 10
+};
+
+console.log("Welcome to the problems in Javascript that you should fix.");
+
+var mydata = [
+  {
+    Name: "Alice",
+    Experience: 20,
+    Title: "Data Journalist"
+  },
+  {
+    Name: "Bob",
+    Experience: 10,
+    Title: "Associate Editor"
+  },
+  {
+    Name: "Carmen",
+    Experience: NaN,
+    Title: "Senior Editor"
+  }
+];
+
+// fix this to fill in your name and display this in the console.
+console.log("Hi, my name is Jiaxin Liu" );
+
+// fix this so you can refere to burrowing owls:
+console.log("Problem 1, owls:" + myobject.burrowingOwls);
+
+// fix to call the function with the cats and dogs properly
+console.log("Problem 2, Add 2 values:" + myobject.cats + myobject.dogs);
+
+// fix to reference the first object in the list.
+console.log("Problem 3, the first json object is:", mydata[0]);
+
+// A very simple function is needed here...
+console.log("Problem 4, print the size or length of the mydata array using the right function in place of the array object name here:", mydata.length);
+
+// Fill in the function, args, and fix the args so this works:
+console.log("Problem 5, subtract experience of Bob from Alice, which requires fixing the data so subtraction works:", mydata[0].Experience-mydata[1].Experience);
+
+console.log("Your page should now display the last h2 element...");
+
+// Raw DOM manipulation without jquery or d3.  This has no errors:
+var child = document.createElement("h2");
+child.innerHTML = "You did it!";
+document.getElementById("content").appendChild(child);
+
+// Extra credit (10pt):
+
+// Create another list of data objects expressing these estimates from 2014:
+// Florida's population is 19,893,297, and it has 27 seats in the US House of Reps.
+// California's population is 38,802,500, and it has 53 seats in the US House.
+// Texas's pop is 26,956,958, and it has 36 seats in the US House.
+//
+// Create a function that calculates the population per house seat for any object.
+// Console.log the output for all 3 states.
+var data2014 = [
+    {
+        state: "Florida",
+        population: 19893297,
+        seat:27
+    },
+    {
+        state: "California",
+        population: 38802500,
+        seat: 53
+    },
+    {
+        state: "Texas",
+        population: 26956958,
+        seat: 36
+    }
+    ];
+var popperseat = function(x){
+    return data2014[x].population/data2014[x].seat
+};
+console.log(popperseat(0), popperseat(1),popperseat(2))
+</script>
+</html>
