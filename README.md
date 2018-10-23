@@ -19,7 +19,7 @@ This is a repo of "Data Visualization Tool" for 2016 Data Journalism Major of  C
 
 * **jsFiddle** https://jsfiddle.net/ 代码HTML、CSS、JS与页面效果同屏展现
 
-* **或直接用上面GitHub建立gist的方式亦可
+* 或直接用上面GitHub建立gist的方式亦可
 
 ## PART III. D3 Books and Tutorial Materials (Borrowed from my professor Lynn Cherny @arnicas) 
 * **Interactive Data Visualization for the Web** ("IDVW"), Scott Murray’s book: http://alignedleft.com/work/d3-book
