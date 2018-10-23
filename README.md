@@ -48,7 +48,7 @@ Online version: http://chimera.labs.oreilly.com/books/1230000000345.  [Code samp
     * These intro videos seem good too: https://www.youtube.com/user/d3Vienno/videos
 
 
-## PART4 JS Refreshers
+## PART IV. JS Refreshers
 
 * These books on HTML/CSS and JS/JQuery are good: http://www.amazon.com/Web-Design-HTML-JavaScript-jQuery/dp/1118907442/ref=sr_1_1?ie=UTF8&qid=1440438330&sr=8-1&keywords=jon+duckett
 
