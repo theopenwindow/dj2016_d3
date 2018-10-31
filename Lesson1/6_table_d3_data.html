@@ -1,0 +1,85 @@
+<html lang="en">
+<!-- inspired from https://bost.ocks.org/mike/nest/ -->
+  <head>
+
+    <title>table: d3 thinking</title>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    
+
+    <style>
+      td, th{ 
+        width: 100px;
+        text-align: left;
+      }
+    </style>
+
+  </head>
+
+<body>
+
+</body>
+<!-- 本地library -->
+<!-- <script type="text/javascript" src="dist/jquery-1.11.3.min.js"></script>
+<script src='dist/d3.v4.min.js'></script> -->
+<!-- d3线上lib -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+<!-- jquery线上lib -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+  // write js code here
+
+  d3.csv("list.csv", function(error, data){
+    if (error) throw error;
+    console.log(data);
+
+    // prepare data
+    var matrix = [];
+    data.forEach(function(d,i){
+      d.age = +d.age;
+      matrix.push([d.name, d.age, d.title])
+    })
+    // sort data
+    // 方法1
+    matrix.sort(function(a,b){
+      return a[1] - b[1];
+    })
+    // 方法2
+    // matrix.sort(function(d){
+    //   return d3.ascending(d[1]);
+    // })
+
+    console.log(matrix)
+
+    // select and give data to t-rows
+    var body = d3.select("body");
+    var table = body.append("table");
+    var tr = table.selectAll("tr")
+      .data(matrix)
+      .enter()
+      .append("tr");
+
+    // select and give data to t-data
+    var td = tr.selectAll("td")
+      .data(function(d) { return d; })
+      .enter()
+      .append("td")
+      .text(function(d){ return d; });
+
+    //  and then, build the t-head
+    var thead = table.append("thead").append("tr");
+    var thead_array = ["Name","Age","Title"];
+
+    thead
+      .selectAll("th")
+      .data(thead_array)
+      .enter()
+      .append("th")
+      .text(function(d){ return d; })
+      .style('color', 'grey')
+      .style('width', '100px');
+  })
+  
+</script>
+</html>

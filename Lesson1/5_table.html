@@ -1,0 +1,104 @@
+<html lang="en">
+<!-- inspired from https://bost.ocks.org/mike/nest/ -->
+  <head>
+
+    <title>table: d3 thinking</title>
+    <meta charset="utf-8">
+    <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    
+
+    <style>
+      td, th{ 
+        width: 100px;
+        text-align: left;
+      }
+    </style>
+
+  </head>
+
+<body>
+
+  <!--   
+    table
+    thead: t - head
+    tbody: t - body
+    tr: t - row
+    td: t - data 
+  -->
+
+  <table>
+    <thead>
+      <tr><td>  A</td><td>  B</td><td>  C</td><td>  D</td></tr>
+    </thead>
+    <tbody>
+      <tr><td>  0</td><td>  1</td><td>  2</td><td>  3</td></tr>
+      <tr><td>  4</td><td>  5</td><td>  6</td><td>  7</td></tr>
+      <tr><td>  8</td><td>  9</td><td> 10</td><td> 11</td></tr>
+      <tr><td> 12</td><td> 13</td><td> 14</td><td> 15</td></tr>
+    </tbody>
+  </table>
+
+</body>
+<!-- 本地library -->
+<!-- <script type="text/javascript" src="dist/jquery-1.11.3.min.js"></script>
+<script src='dist/d3.v4.min.js'></script> -->
+<!-- d3线上lib -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+<!-- jquery线上lib -->
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+  // write js code here
+
+  // 1. 认识 d3 select 与 selectAll
+  var td = d3.selectAll("tbody td");
+  // console.log(td)
+  // the same with ...
+  var td = d3.select("tbody").selectAll("td");
+  // console.log(td)
+
+  // 区别于上面的selection: 具有4行层次
+  var td = d3.selectAll("tbody tr").selectAll("td");
+  // console.log(td)
+
+  // 2. Style 
+  // 让每行第一个data显示为红色
+  // td.style("color", function(d, i) { return i ? null : "red"; });
+
+  // the same with ... RECAP IF...
+  /*td.style("color", function(d, i) {console.log(i)
+    if (i !== 0) {
+      return null;
+    }else{
+      return "red";
+    }
+  })*/
+
+  var matrix = [
+    [ 0,  1,  2,  3],
+    [ 4,  5,  6,  7],
+    [ 8,  9, 10, 11],
+    [12, 13, 14, 15],
+  ];
+
+  var td = d3.selectAll("tbody tr")
+    .data(matrix)
+    .selectAll("td")
+    .data(function(d,i) { return d; }) 
+
+  var body = d3.select("body");
+
+  var table = body.append("table");
+
+  var tr = table.selectAll("tr")
+    .data(matrix)
+    .enter().append("tr");
+
+  var td = tr.selectAll("td")
+    .data(function(d) { return d; })
+    .enter().append("td")
+    .text(function(d){ return d; });
+
+  
+</script>
+</html>

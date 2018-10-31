@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!-- Revised from one of Scott Murray's Knight D3 course files. -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+    	<meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+		<title>Console Javascript Recap</title>
+		<style type="text/css">
+			body {
+				background-color: #ddddff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<h1>Nothing here except this heading</h1>
+		<p> Everything of interest in this file is in the console window.  Open it with Command-Opt-I on a Mac, or use the menus.  Then reload and look at the console.
+	</body>
+
+	<script type="text/javascript">
+
+		//JavaScript
+		
+		// 双斜线，This is a comment 注释, 代码变灰，js自动屏蔽这段，给开发者看
+
+		// RECAP1. variable, 即"var", 变量 
+		var number = 5;
+		var text = "bananas";
+
+
+
+		// RECAP2. console.log的作用：“告诉我这个是什么”
+		console.log(number);
+	  	console.log(text);
+	  	//console.log("I have " + number + " " + text + ".");
+
+
+
+		// RECAP3. array 数组
+		var array = [ 5, 10, 15, 20, 25 ];
+		// console.log(array);
+		//console.log("数组中的第1个值是 " + array[0]);
+		//console.log("数组中的第2个值是 " + array[1]);
+		//console.log("数组中的第3个值是 " + array[2]);
+		//console.log("数组中的第4个值是 " + array[3]);
+		//console.log("数组中的第5个值是 " + array[4]);
+
+
+
+		// RECAP4. object 对象
+		var myobject = {
+			"Name": "Alice",
+			"Age": 25,
+			"Title": "Graduate Student"
+		};
+		// console.log(object);
+		// console.log("The name is " + object.Name);
+
+
+
+		// RECAP5. an array of objects 对象形成的一个数组，当我们用d3加载csv数据的时候，就会被读成这个样子：
+		var dataset = [
+			{
+				"Name": "Alice",
+				"Age": 25,
+				"Title": "Graduate Student"
+			},
+			{
+				"Name": "Bob",
+				"Age": 34,
+				"Title": "Associate Editor"
+			},
+			{
+				"Name": "Carmen",
+				"Age": 42,
+				"Title": "Senior Editor"
+			},
+			{
+				"Name": "Dan",
+				"Age": 19,
+				"Title": "Production Intern"
+			},
+			{
+				"Name": "Esmerelda",
+				"Age": 29,
+				"Title": "Freelance Reporter"
+			},
+			{
+				"Name": "Frank",
+				"Age": 51,
+				"Title": "Photographer"
+			}
+		];
+
+		// console.log(dataset);
+
+		//console.log("The value in position 0 is " + dataset[0]);
+		// console.log("The value in position 1 is " + dataset[1]);
+		// console.log("The value in position 2 is " + dataset[2]);
+		// console.log("The value in position 3 is " + dataset[3]);
+		// console.log("The value in position 4 is " + dataset[4]);
+		// console.log("The value in position 5 is " + dataset[5]);
+
+		//console.log("The name in position 0 is " + dataset[0].Name);
+		// console.log("The name in position 1 is " + dataset[1].Name);
+		// console.log("The name in position 2 is " + dataset[2].Name);
+		// console.log("The name in position 3 is " + dataset[3].Name);
+		// console.log("The name in position 4 is " + dataset[4].Name);
+		// console.log("The name in position 5 is " + dataset[5].Name);
+
+		// 复习 array.push
+
+	</script>
+</html>
