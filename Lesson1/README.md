@@ -61,10 +61,13 @@
       if (error)  { console.log("error loading", error); }
       //your d3 code
     })
+    csv 可以替换成其他数据形式，如tsv/json。
 ````
-  csv 可以替换成其他数据形式，如tsv/json。
-
+  
 8. 用d3写一个简单的表格：初识d3思维 [5_table.html](5_table.html)
+
+* How selections work demo: selectAll vs. select: http://prcweb.co.uk/lab/selection/
+
 ````
     d3.select().data().enter().append();
 ````
@@ -79,11 +82,17 @@ DDL: 5pm on Nov.6th
 
 Readings:
 
-* Read Chapter 3 of IDVW: http://chimera.labs.oreilly.com/books/1230000000345/ch02.html. You can stop at the SVG part at the end of chapter 3, for now. (Chapter 2 may be nice background but is optional.)
+* Read Mike Bostock's Nested Selections: https://bost.ocks.org/mike/nest/. 
 
-* Loading data with D3, at http://learnjsdata.com/read_data.html.
+* Thinking with Joins https://bost.ocks.org/mike/join/.
+
+* 超经典的三个小圈圈 https://bost.ocks.org/mike/circles/.
+
+* d3教程大神Scott Murray的视频Binding Data https://www.youtube.com/watch?v=XtxfXcFDMaQ&index=2&list=PL0tDk-f4v1ujCTy4xgYIwzky0uFEm7wiY.
 
 
-**Homework:** 复习js 解决[js_errors.html](js_errors.html) 中的问题，让它显示正确。 发送gist链接，subject line: "Lesson 1, JS errors"。 (20pt)
-
-**Homework**: 任意下载一组数据，按照以上要求format your data。发送gist链接， subject line:'Lesson 1: d3 load CSV data.'  You'll need this file next week. (12pt)
+**Homework**: 任意下载一组数据，再用d3写成table，发送gist链接， subject line:'Lesson 1: d3 table.'  (30pt)
+* 以其中一列为默认排序，点击任意table header可以以该列为标准进行排序；
+* 创立一列以其它数据为基础的统计数据，和、差、百分比等都可以。
+* 用你自己的方式美化它，要比我的example好哦！
+* 需要有标题、相应解释文字、数据来源及作者署名. (25pts)
