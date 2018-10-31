@@ -27,43 +27,45 @@
 * 变量名称：清晰、短、无空格
 * 所有“列”需要命名
 * 数据格式：无逗号
-
+````
     var object = {
       Country: “USA”,
       “Number of Bananas per Capita (millions)”: “556”,
       ”Total Length of Peels if Laid End to End (kilometers)”: “412415123”
     }
+````
 
     如果要得到“556”，你需要type:
 
+````
     object[“Number of Bananas per Capita (millions)”]
-
+````
     对比无逗号：
-
+````
     var object = { 
       country: “USA”,
       numBananas: “556”,
       peelLength: “412415123”
     }
-
+````
     易读，且，精简call到556的方式
-
+````
     object.numBananas  //returns “556”
-
+````
 
 5. 加载数据：[4_d3_load_data.html](4_d3_load_data.html)
-
+````
     d3.csv("data.csv",function(error, data){
       if (error)  { console.log("error loading", error); }
       //your d3 code
     })
-
+````
   csv 可以替换成其他数据形式，如tsv/json。
 
 6. 用d3写一个简单的表格：初识d3思维 [5_table.html](5_table.html)
-
+````
     d3.select().data().enter().append();
-
+````
 7. 用d3引用csv数据，写一个表格 [6_table_d3_data.html](6_table_d3_data.html)
 
 8. 用d3引用csv数据，写一个heatmap表格 [7_heatmap_table.html](7_heatmap_table.html)
