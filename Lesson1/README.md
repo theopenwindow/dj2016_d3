@@ -1,4 +1,4 @@
-## PART I. 初始d3思维
+## Lesson1. 初始d3思维
 
 1. 为什么是d3? https://d3js.org/
 
