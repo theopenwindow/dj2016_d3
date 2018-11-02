@@ -82,17 +82,17 @@ DDL: 5pm on Nov.6th
 
 **Readings**:
 
-    * Read Mike Bostock's Nested Selections: https://bost.ocks.org/mike/nest/. 
+   * Read Mike Bostock's Nested Selections: https://bost.ocks.org/mike/nest/. 
 
-    * Thinking with Joins https://bost.ocks.org/mike/join/.
+   * Thinking with Joins https://bost.ocks.org/mike/join/.
 
-    * 超经典的三个小圈圈 https://bost.ocks.org/mike/circles/.
+   * 超经典的三个小圈圈 https://bost.ocks.org/mike/circles/.
 
-    * d3教程大神Scott Murray的视频Binding Data https://www.youtube.com/watch?v=XtxfXcFDMaQ&index=2&list=PL0tDk-f4v1ujCTy4xgYIwzky0uFEm7wiY.
+   * d3教程大神Scott Murray的视频Binding Data https://www.youtube.com/watch?v=XtxfXcFDMaQ&index=2&list=PL0tDk-f4v1ujCTy4xgYIwzky0uFEm7wiY.
 
 
-**Gist**: 任意下载一组数据，再用d3写成table，发送gist链接， subject line:'Lesson 1: d3 table.'  (30pt)
-* 以其中一列为默认排序；
-* 创立一列以其它数据为基础的统计数据，和、差、百分比等都可以。
-* 用你自己的方式美化它，要比我的example好哦！
-* 需要有标题、相应解释文字、数据来源及作者署名。
+**Gist**: 任意下载一组数据，再用d3写成table，发送gist链接， subject line:'Lesson 1: d3 table'  (30pt)
+   * 以其中一列为默认排序；
+   * 创立一列以其它数据为基础的统计数据，和、差、百分比等都可以；
+   * 用你自己的方式美化它，要比我的example好哦；
+   * 需要有标题、相应解释文字、数据来源及作者署名。
