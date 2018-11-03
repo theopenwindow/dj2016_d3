@@ -1,5 +1,4 @@
 ## Lesson1. 初识d3思维
->>>>>>> origin/master
 
 1. 为什么是d3? https://d3js.org/
 
