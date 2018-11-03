@@ -1,0 +1,85 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>sclae</title>
+        <style>
+     
+        </style>
+    </head>
+
+    <body>
+
+        <h1>Scale</h1>
+
+        <p>Uncomment and see different scales.</p>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+        var value;
+
+        // 1. Linear scale处理连续性数据，如1-100：
+        var x = d3.scaleLinear()
+                .domain([10, 130])
+                .range([0, 960]);
+        // value = x(20); 
+        // value = x(50); 
+
+        var color = d3.scaleLinear()
+                    .domain([10, 100])
+                    .range(["brown", "steelblue"]);
+        // value = color(20); 
+        // value = color(50); 
+
+
+
+
+        // 2. Ordinal scale处理类别性数据，如地名、人名：
+        var color = d3.scaleOrdinal()
+                    .domain(["西城", "东城", "朝阳"])
+                    .range(["brown", "steelblue", "lightpink"]);
+        // value = color("东城"); 
+        
+        var x = d3.scaleBand()
+                .domain(["西城","东城","朝阳"])
+                .range([0, 100])
+                .padding(0.1);
+        // value = x("西城"); 
+        // value = x("东城"); 
+
+
+
+
+        // 3. Linear scale的domain数据，用d3计算出大小范围：
+        // 方法1：分别得出大小值
+        var data = [20,34,42,31,25];
+        var myMax = d3.max(data);
+        var myMin = d3.min(data);
+
+        // 方法2：直接得出值域范围
+        var myMaxAndMin = d3.extent(data);
+
+        var data = [{"value":"20"},{"value":"34"},{"value":"42"},{"value":"31"},{"value":"25"}];
+        // 如何用function读出data的大小范围？
+
+
+
+
+        // 4. Ordinal scale 的domain数据，用js铺出所有类别：
+        var data = [{"district":"西城"},{"district":"东城"},{"district":"朝阳"}]
+        var district_extent = data.map(function(d){ return d.district;})
+        
+        console.log(value)
+    </script>
+
+</html>
+
+

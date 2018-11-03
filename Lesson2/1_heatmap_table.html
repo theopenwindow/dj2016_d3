@@ -55,12 +55,12 @@
   <!-- lib -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-  <script type="text/javascript" src="dist/stupidtable.js"></script>
+  <script type="text/javascript" src="stupidtable.js"></script>
 
   <!-- js -->
   <script type="application/javascript">
 
-    d3.csv("Mortality_rate_infant.csv", function(error, myData){
+    d3.csv("mortality_rate_infant.csv", function(error, myData){
       if (error) throw error;
       console.log(myData)
 
@@ -99,7 +99,7 @@
       var table = body.append("table");
       var tablebody = table.append("tbody");
 
-      var tr = table.selectAll("tr")
+      var tr = tablebody.selectAll("tr") //tr 应该在tablebody里selectAll('tr')，而不是在table里直接选tr
             .data(matrix)
             .enter()
             .append("tr");
