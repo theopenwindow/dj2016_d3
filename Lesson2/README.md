@@ -1,4 +1,4 @@
-## Lesson II. d3比例尺与bar chart
+## Lesson II. d3比例尺与scatter plot
 
 ### 1. Indentation
     
