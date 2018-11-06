@@ -72,21 +72,27 @@
 					.attr("width", fullWidth)
 					.attr("height", fullHeight)
 					.append("g") // 在svg上加一个group,即<g>
-					.attr("transform", "translate(" + margin.left + "," + margin.top + ")"); //
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+					.attr("width", width)
+					.attr("height", height);
+
 
 		// 比例尺
 		// scaleLinear():告诉d3要放进去的是线性数据
 		// range():输出范围，在此是一个长度
 		var xScale = d3.scaleLinear().range([ 0, width]);
-		var yScale = d3.scaleLinear().range([ height, 0 ]); //因为y轴的0在最下面，而(0,0)在左上角还记得吗？，因此要[height,0]
+		var yScale = d3.scaleLinear().range([ height, 0 ]); 
+		//因为y轴的0在最下面，而(0,0)在左上角还记得吗？，因此要[height,0]
 
-		//  轴
-		//  axisBottom：设在图像下方，用xScale这个比例尺，保留15个tick
-		var xAxis = d3.axisBottom(xScale).ticks(15);
+
+		//  轴 API https://github.com/d3/d3-axis
+		//  axisBottom：axis with tick bottom-oriented，建立刻度线向下的轴，用xScale这个比例尺，保留15个tick(刻度线)   
+		var xAxis = d3.axisBottom(xScale).ticks(10);
 		var yAxis = d3.axisLeft(yScale)
 						.tickFormat(function(d) {
-							return d + "%"
+							return d + "%";
 						});
+
 
 		d3.csv("betterlifeindex.csv", function(data) {
 

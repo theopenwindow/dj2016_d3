@@ -28,7 +28,7 @@
 
         // 1. Linear scale处理连续性数据，如1-100：
         var x = d3.scaleLinear()
-                .domain([10, 130])
+                .domain([10, 100])
                 .range([0, 960]);
         // value = x(20); 
         // value = x(50); 
@@ -37,24 +37,26 @@
                     .domain([10, 100])
                     .range(["brown", "steelblue"]);
         // value = color(20); 
-        // value = color(50); 
+        // value = color(90); 
 
 
 
 
-        // 2. Ordinal scale处理类别性数据，如地名、人名：
+        // 2. Ordinal scale 处理类别性数据，如地名、人名：
         var color = d3.scaleOrdinal()
-                    .domain(["西城", "东城", "朝阳"])
+                    .domain(["西城", "东城", "朝阳"]) 
                     .range(["brown", "steelblue", "lightpink"]);
-        // value = color("东城"); 
-        
+        value = color("东城");
+
+        // d3.select("body").append("p").text("steelblue").style("color","steelblue");
+        // style and attr
+
         var x = d3.scaleBand()
                 .domain(["西城","东城","朝阳"])
-                .range([0, 100])
+                .range([0, 120])
                 .padding(0.1);
         // value = x("西城"); 
         // value = x("东城"); 
-
 
 
 
@@ -63,13 +65,12 @@
         var data = [20,34,42,31,25];
         var myMax = d3.max(data);
         var myMin = d3.min(data);
-
+// console.log(myMin,myMax)
         // 方法2：直接得出值域范围
         var myMaxAndMin = d3.extent(data);
 
         var data = [{"value":"20"},{"value":"34"},{"value":"42"},{"value":"31"},{"value":"25"}];
         // 如何用function读出data的大小范围？
-
 
 
 
