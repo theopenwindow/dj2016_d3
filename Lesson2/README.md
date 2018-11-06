@@ -12,12 +12,7 @@
 
 * 尽量避免使用dual-axis chart，除非真的密切相关 [dual-scaled_axes.pdf](dual-scaled_axes.pdf)
 
-### 1. Homework
 
-* IBM指数：果雅迪 http://bl.ocks.org/guoguoguoyadi/48a293f672c55dc34f2da8e9adef1f18
-* 优美的居中table和置顶icon，nice font：薛雨菲 http://bl.ocks.org/xyfaye/9933f388624b63ed070f9485613e21e3
-* 中文完整table：潘雯智 https://bl.ocks.org/hlydxpwz/be60f41fa6a368ed308586a224afd8a0
-* click to sort: 陈晓晗 https://bl.ocks.org/Anthea98/be39d0b05720b6dd135341038078aaa1
 
 ### 2. Indentation
     
