@@ -4,11 +4,11 @@
 
 * US mid-term election 
 
-** The candidates in the midterm elections are among the most diverse set to run in the history of the United States.  https://www.nytimes.com/interactive/2018/10/31/us/politics/midterm-election-candidates-diversity.html
+    ** The candidates in the midterm elections are among the most diverse set to run in the history of the United States.  https://www.nytimes.com/interactive/2018/10/31/us/politics/midterm-election-candidates-diversity.html
 
-** Forecasting the race for the House https://projects.fivethirtyeight.com/2018-midterm-election-forecast/house/
+    ** Forecasting the race for the House https://projects.fivethirtyeight.com/2018-midterm-election-forecast/house/
 
-* <img src="img/alberto.png">
+* <img src="alberto.png">
 
 * 尽量避免使用dual-axis chart，除非真的密切相关 [dual-scaled_axes.pdf](dual-scaled_axes.pdf)
 
@@ -146,13 +146,13 @@ var svg = d3.select("body") //或者用class或id去call某一个div
 
 * range 输出范围，我们想要数据呈现在屏幕上的样子，可能是一段距离、面积大小，也可能是一个颜色范围
 
-Jerome Cukier对于d3 scales的图像示意:
+* Jerome Cukier对于d3 scales的图像示意:
 
 <img src="http://i0.wp.com/www.jeromecukier.net/wp-content/uploads/2011/08/d3scale1.png">
 
 * d3.scale.domain([输入值域]).range([输出范围])
 
-* go through [4_scale.html](4_scale.html)
+* go through [5_scale.html](5_scale.html)
 
 ```
 ** Linear scale处理连续性数据，如1-100：
@@ -195,22 +195,26 @@ data.map(function(d) { return d.XXX; })
 
 * d3中的scale，除了linear, ordinal, band，还有非常多，参考 d3-scale API https://github.com/d3/d3-scale
 
+* See more examples in [5_scale_examples.html](6_scale_examples.html).
+
+* Reference:
+
+    ** Quantitative Scales: https://github.com/mbostock/d3/wiki/Quantitative-Scales
+    ** Ordinal Scales: https://github.com/mbostock/d3/wiki/Ordinal-Scales
+    ** Time Scales: https://github.com/mbostock/d3/wiki/Time-Scales
+    ** Supplementary: http://www.jeromecukier.net/blog/2011/08/11/d3-scales-and-color/
+    ** Videos: [Scott Murray's linear scales](https://www.youtube.com/watch?v=5EZSOsBXdS0&list=PL0tDk-f4v1uh4s33k1qJ7Xl96cOySkLnt), [ordinal scales](https://www.youtube.com/watch?v=WxtJ7VfP_VE&list=PL0tDk-f4v1uh4s33k1qJ7Xl96cOySkLnt&index=2)
+
 ### 9. Now it's easy to draw a scatter plot!
 
-* Go through [2_scatter_plot.html](2_scatter_plot.html)
+* Go through [7_scatter_plot.html](7_scatter_plot.html)
 
-    ** d3 axis https://github.com/d3/d3-axis
-
-See more examples in [scale_examples.html](scale_examples.html).
+* d3 axis https://github.com/d3/d3-axis
 
 
-Reference:
 
-* Quantitative Scales: https://github.com/mbostock/d3/wiki/Quantitative-Scales
-* Ordinal Scales: https://github.com/mbostock/d3/wiki/Ordinal-Scales
-* Time Scales: https://github.com/mbostock/d3/wiki/Time-Scales
-* Supplementary: http://www.jeromecukier.net/blog/2011/08/11/d3-scales-and-color/
-* Videos: [Scott Murray's linear scales](https://www.youtube.com/watch?v=5EZSOsBXdS0&list=PL0tDk-f4v1uh4s33k1qJ7Xl96cOySkLnt), [ordinal scales](https://www.youtube.com/watch?v=WxtJ7VfP_VE&list=PL0tDk-f4v1uh4s33k1qJ7Xl96cOySkLnt&index=2)
+
+
 
 
 
