@@ -216,9 +216,9 @@ data.map(function(d) { return d.XXX; })
 
 ## Homework
 
-DDL: 5pm on Nov.13th
+**DDL**: 5pm on Nov.13th
 
-Reading:
+**Reading**:
 
 * Peter Cook的教程，清晰易读，关于scales：https://d3indepth.com/scales/
 
