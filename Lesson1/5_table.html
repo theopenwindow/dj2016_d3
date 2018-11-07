@@ -51,19 +51,20 @@
   // write js code here
 
   // 1. 认识 d3 select 与 selectAll
-  var td = d3.selectAll("tbody td");
-  // console.log(td)
+  //var td = d3.selectAll("tbody td");
+  //console.log(td)
   // the same with ...
-  var td = d3.select("tbody").selectAll("td");
+  //var td = d3.select("tbody").selectAll("td");
   // console.log(td)
 
   // 区别于上面的selection: 具有4行层次
-  var td = d3.selectAll("tbody tr").selectAll("td");
-  // console.log(td)
+  //var td = d3.selectAll("tbody tr").selectAll("td");
+  //console.log(td)
 
   // 2. Style 
   // 让每行第一个data显示为红色
-  // td.style("color", function(d, i) { return i ? null : "red"; });
+  //td.style("color","red");td.style("background-color","red");
+  //td.style("color", function(d, i) { return i ? null : "red"; });//把第一列变成红色;d和i不用专门说明，默认就知道
 
   // the same with ... RECAP IF...
   /*td.style("color", function(d, i) {console.log(i)
@@ -81,10 +82,10 @@
     [12, 13, 14, 15],
   ];
 
-  var td = d3.selectAll("tbody tr")
-    .data(matrix)
-    .selectAll("td")
-    .data(function(d,i) { return d; }) 
+  //var td = d3.selectAll("tbody tr")
+    //.data(matrix)
+    //.selectAll("td")
+    //.data(function(d,i) { return d; }) 
 
   var body = d3.select("body");
 
@@ -92,12 +93,15 @@
 
   var tr = table.selectAll("tr")
     .data(matrix)
-    .enter().append("tr");
+    .enter()
+    .append("tr");
 
   var td = tr.selectAll("td")
     .data(function(d) { return d; })
-    .enter().append("td")
-    .text(function(d){ return d; });
+    .enter()
+    .append("td")
+    //.text("数据");
+    .text(function(d){ return d; });//把td里面的每一个数据给我
 
   
 </script>

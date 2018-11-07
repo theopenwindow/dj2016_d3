@@ -1,0 +1,198 @@
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Lesson 1: d3 table</title>
+    <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        /*background-color:#E1E1E1;*/
+      }
+      table {
+        border-spacing: 0px;
+        font-family: 'Roboto Condensed', serif;
+        font-size: 90%;
+        margin:40px auto;
+      }
+      th {
+        cursor: pointer;
+      }
+
+      th, td {
+        padding: 2px 10px 2px 5px;
+        text-align: left;
+        border-top: 1px solid #E3E5E6;
+      }
+      .intro{
+        margin-top: 30px;
+      }
+
+      .wrapper{
+        width: 940px;
+        margin: 40px auto 40px auto;
+        background-color: #FFFFFF;
+      }
+
+      h1 {
+        font-family: 'Lora', serif;
+      }
+
+      p {
+        font-family: 'Lora', serif;
+        font-size: 90%;
+      }
+      .source{
+        float: right;
+        margin-right: 30px;
+        margin-top: 0;
+      }
+      .clearfix:after{
+        content:".";
+        display:block;
+        height:0;
+        visibility:hidden;
+        clear:both;
+}
+      footer{
+        margin-top:40px;
+        text-align:center;
+        margin-bottom: 0;
+      }
+      .up{
+        position: fixed;
+        right: 10px;
+        top: 50%;
+      }
+          </style>
+  </head>
+
+  <body>
+    <div class="up"> 
+  <a href="#top">
+      <img src="https://i.postimg.cc/907qj5DG/up.png" width="40" height="50" alt=""/>
+  </a> 
+  </div>
+    <div class='wrapper'>
+      <h1>Population Aging</h1>
+      <div class="intro">
+        <p>Population ageing is an increasing median age in the population of a region due to declining fertility rates and/or rising life expectancy. </p>
+        <p>The economic effects of an aging population are considerable. Older people have higher accumulated savings per head than younger people, but spend less on consumer goods. Depending on the age ranges at which the changes occur, an aging population may thus result in lower interest rates and the economic benefits of lower inflation. Because elderly people are more inflation averse, countries with more elderly tend to exhibit lower inflation rates [18]. Some economists (Japan) see advantages in such changes, notably the opportunity to progress automation and technological development without causing unemployment. They emphasize a shift from GDP to personal well-being.</p>
+        <p class="source clearfix">Source: World Development Indicators</p>
+      </div>
+      <div id="table" class="clearfix"></div>
+
+    </div><!-- warpper -->
+     <!-- <footer>
+     <p>&copy;2018&nbsp; <a href="mailto:15041172512@163.com">Contact us</a></p>
+     <p>&nbsp;</p>
+   </footer>-->
+  </body>
+
+  <!-- lib -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+  <script type="text/javascript" src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <!-- js -->
+  <script type="application/javascript">
+    d3.csv("AgingPopulation-2.csv", function(error, myData){
+      if (error) throw error;
+      console.log(myData)
+
+      var matrix = [];
+      var allDifferences = [];
+      myData.forEach(function(d, i){
+            d.year1960 = +d.year1960;
+            d.year1965 = +d.year1965;
+            d.year1970 = +d.year1970;
+            d.year1975 = +d.year1975;
+            d.year1980 = +d.year1980;
+            d.year1985 = +d.year1985;
+            d.year1990 = +d.year1990;
+            d.year1995 = +d.year1995;
+            d.year2000 = +d.year2000;
+            d.year2005 = +d.year2005;
+            d.year2010 = +d.year2010;
+            d.year2015 = +d.year2015;
+            d.difference = (d.year2015 - d.year1960).toFixed(2);//省略到小数点后2位
+            //d.difference = +d.difference;
+
+            matrix.push([d.Country_name, d.year1960, d.year1965, d.year1970, d.year1975, d.year1980, d.year1985, d.year1990, d.year1995, d.year2000, d.year2005, d.year2010,d.year2015,  d.difference]);
+
+            allDifferences.push(d.difference);
+      });
+
+      matrix.sort(function(a,b){
+        return b[13] - a[13];
+      });
+      //console.log(matrix);
+      //console.log(allDifferences);
+      var colorScale = d3.scaleLinear()
+            .domain(d3.extent(allDifferences))//输入的数值
+            .range(["rgba(221,140,23,0.5)", "rgba(221,140,23,1)"])//输出的范围
+
+     
+      var body = d3.select("body");
+      var table = body.append("table");
+      var tablebody = table.append("tbody");
+
+      var tr = table.selectAll("tr")
+            .data(matrix)
+            .enter()
+            .append("tr");
+
+      var td = tr.selectAll("td")
+            .data(function(d) {
+              return d;
+            })
+            .enter()
+            .append("td")
+            .style("background-color", function(d,i) {
+              // 最后一列"difference"给颜色:
+              if (i === 13) {
+                return colorScale(d);
+              }
+            })
+            .text(function(d){
+              return d;
+            })
+            .style('color', function(d,i){
+              if (i === 0) {
+                return 'grey';
+              }
+            });
+
+      var header = table.append("thead").append("tr");
+      var headerObjs = [
+            { label: "Country Name", sort_type: "string" },
+            { label: "Year1960", sort_type: "int" },
+            { label: "Year1965", sort_type: "int" },
+            { label: "Year1970", sort_type: "int" },
+            { label: "Year1975", sort_type: "int" },
+            { label: "Year1980", sort_type: "int" },
+            { label: "Year1985", sort_type: "int" },
+            { label: "Year1990", sort_type: "int" },
+            { label: "Year1995", sort_type: "int" },
+            { label: "Year2000", sort_type: "int" },
+            { label: "Year2005", sort_type: "int" },
+            { label: "Year2010", sort_type: "int" },
+            { label: "Year2015", sort_type: "int" },
+            { label: "Difference", sort_type: "int" },
+      ];
+
+      header
+            .selectAll("th")
+            .data(headerObjs)
+            .enter()
+            .append("th")
+            .attr("data-sort", function(d){ return d.sort_type; })
+            .text(function(d){ return d.label; })
+            .style('color', 'grey');
+
+      // jquery sorting applied to it - could be done with d3 and events.
+      //$("table").stupidtable();
+
+    });
+  </script>
+</html>
