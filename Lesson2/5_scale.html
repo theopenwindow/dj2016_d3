@@ -55,6 +55,7 @@
                 .domain(["西城","东城","朝阳"])
                 .range([0, 120])
                 .padding(0.1);
+        // 
         // value = x("西城"); 
         // value = x("东城"); 
 
@@ -65,7 +66,7 @@
         var data = [20,34,42,31,25];
         var myMax = d3.max(data);
         var myMin = d3.min(data);
-// console.log(myMin,myMax)
+        // console.log(myMin,myMax)
         // 方法2：直接得出值域范围
         var myMaxAndMin = d3.extent(data);
 

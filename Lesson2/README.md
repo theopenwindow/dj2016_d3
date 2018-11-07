@@ -2,11 +2,21 @@
 
 ### something before code
 
+### 1. Homework
+
+* IBM指数：果雅迪 http://bl.ocks.org/guoguoguoyadi/48a293f672c55dc34f2da8e9adef1f18
+* 优美的居中table和置顶icon，nice font：薛雨菲 http://bl.ocks.org/xyfaye/9933f388624b63ed070f9485613e21e3
+* 中文完整table：潘雯智 https://bl.ocks.org/hlydxpwz/be60f41fa6a368ed308586a224afd8a0
+* click to sort：陈晓晗 https://bl.ocks.org/Anthea98/be39d0b05720b6dd135341038078aaa1
+* subject line! don't forget about the data! index.html! 语言统一蟹蟹！（我的锅。。。
+
 * US mid-term election 
 
-    ** The candidates in the midterm elections are among the most diverse set to run in the history of the United States.  https://www.nytimes.com/interactive/2018/10/31/us/politics/midterm-election-candidates-diversity.html
+    ** WP: https://www.washingtonpost.com/election-results/governor
 
-    ** Forecasting the race for the House https://projects.fivethirtyeight.com/2018-midterm-election-forecast/house/
+    ** NYT: The candidates in the midterm elections are among the most diverse set to run in the history of the United States.  https://www.nytimes.com/interactive/2018/10/31/us/politics/midterm-election-candidates-diversity.html
+
+    ** 538: Forecasting the race for the House https://projects.fivethirtyeight.com/2018-midterm-election-forecast/house/
 
 * <img src="alberto.png">
 
@@ -114,7 +124,7 @@ transform：改变位置、大小、角度
 
 * Mike Bostock关于D3 margin convention的post: http://bl.ocks.org/mbostock/3019563.
 
-* go through [4_margin.js](4_margin.js)
+* go through [4_margin.html](4_margin.html)
 
 * 建立你自己的d3 graph开头部分，可复用，建议如下：
 
@@ -137,6 +147,8 @@ var svg = d3.select("body") //或者用class或id去call某一个div
 
 ### 8. The D3 Scale 比例尺：把数据转化成图像
 
+* Scales are mainly used for transforming data values to visual variables such as position, length and colour. (Peter Cook)
+
 * domain 输入值域，即，我们的数据
 
 * range 输出范围，我们想要数据呈现在屏幕上的样子，可能是一段距离、面积大小，也可能是一个颜色范围
@@ -150,18 +162,17 @@ var svg = d3.select("body") //或者用class或id去call某一个div
 * go through [5_scale.html](5_scale.html)
 
 ```
-** Linear scale处理连续性数据，如1-100：
+** Linear scale，通常用于处理连续性数据，如1-100：
 
 var x = d3.scaleLinear()
         .domain([10, 130])
         .range([0, 960]);
 
-** Ordinal scale处理类别性数据，如地名、人名：
+** Ordinal scale，通常用于处理离散数据，如地名、人名：
 
 var x = d3.scaleOrdinal()
         .domain(["西城","东城","朝阳"])
-        .range([0, 100])
-        .padding(0.1);
+        .range(["black", "#ccc", "#ccc"]);
 
 
 ** 用d3计算出大小范围：
@@ -190,8 +201,6 @@ data.map(function(d) { return d.XXX; })
 
 * d3中的scale，除了linear, ordinal, band，还有非常多，参考 d3-scale API https://github.com/d3/d3-scale
 
-* See more examples in [5_scale_examples.html](6_scale_examples.html).
-
 * Reference:
 
     ** Quantitative Scales: https://github.com/mbostock/d3/wiki/Quantitative-Scales
@@ -202,7 +211,7 @@ data.map(function(d) { return d.XXX; })
 
 ### 9. Now it's easy to draw a scatter plot!
 
-* Go through [7_scatter_plot.html](7_scatter_plot.html)
+* Go through [6_scatter_plot.html](6_scatter_plot.html)
 
 * d3 axis https://github.com/d3/d3-axis
 
