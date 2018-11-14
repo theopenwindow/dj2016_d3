@@ -41,11 +41,10 @@
             .label {
                 font-size: 12pt;
                 fill: steelblue;
+                text-anchor: start;
             }
 
             .circle:hover {
-                stroke-width: 10px;
-                fill: orange;
                 cursor: pointer;
             }
 
@@ -56,7 +55,8 @@
 
             .tooltip p {
                 background-color: white;
-                border: gray 1px solid;
+                color: steelblue;
+                border: steelblue 1px solid;
                 padding: 2px;
             }
 
@@ -120,18 +120,20 @@
                             return yScale(d.emissions);
                         });
 
-        var radius = 5;
+        var radius = 3;
 
         // add a tooltip to body - not to the svg itself!
         var tooltip = d3.select("body")
                         .append("div")
                         .attr("class", "tooltip");
 
-        d3.csv("data/usa_co2_emissions.csv", function(data) {
+        d3.csv("data/usa_co2_emissions.csv", function(error, data) {
 
+            if (error) throw error;
+            
             data.forEach(function(d){ 
                 d.year = parseTime(d.year); 
-                d.emissions = +d.emissions;
+                d.emissions = +d.emissions/1000;
             });
 
             xScale.domain(d3.extent(data, function(d){
@@ -153,10 +155,10 @@
             var lastItem = data[data.length - 1];
 
             svg.append("text")
-                .attr("x", xScale(lastItem.year))
+                .attr("x", xScale(lastItem.year) + 5)
                 .attr("y", yScale(lastItem.emissions))
                 .attr("class", "label")
-                .text(d3.format(".0f")(lastItem.emissions)); 
+                .text(d3.format(".0f")(lastItem.emissions) + "万吨"); 
 
             svg.append("g")
                 .attr("class", "y axis")
@@ -195,20 +197,26 @@
 
         function mouseoverFunc(d) {
             // console.log(d);
-            return tooltip
+            tooltip
                 .style("display", null) // 区别"none": 不呈现；"null": 取消之前所有给display的属性。
-                .html("<p>" + formatTime(d.year) + "<br>排放量: " + d3.format(".0f")(d.emissions) + " kt</p>");
+                .html("<p>" + formatTime(d.year) + "<br>排放量: " + d3.format(".0f")(d.emissions) + " 万吨</p>");
+
+            d3.select(this)
+                .attr("r", radius * 2);
         }
 
         function mousemoveFunc(d) {
             // console.log("events", window.event, d3.event);
-            return tooltip
+            tooltip
                 .style("top", (d3.event.pageY - 10) + "px" )
                 .style("left", (d3.event.pageX + 10) + "px");
         }
 
         function mouseoutFunc(d) {
-            return tooltip.style("display", "none"); 
+            tooltip.style("display", "none"); 
+
+            d3.selectAll(".circle")
+                .attr("r", radius);
         }
 
     </script>

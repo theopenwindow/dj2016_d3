@@ -100,12 +100,13 @@
                             return yScale(d.emissions);
                         });
 
-        d3.csv("data/usa_co2_emissions.csv", function(data) {
-
+        d3.csv("data/usa_co2_emissions.csv", function(error,data) {
+            
+            if (error) throw error;
             // format data
             data.forEach(function(d){ 
                 d.year = parseTime(d.year); 
-                d.emissions = +d.emissions;
+                d.emissions = +d.emissions/1000;
             });
             // console.log(data)
 

@@ -1,9 +1,5 @@
 ## Lesson III. d3 time format与line chart
 
-#### Homework
-
-** 
-
 #### 2015 Infographics and Data Visualization with d3 MOOC: really similar to our class
 ** mindmeister https://www.mindmeister.com/fr/524424244/mooc-data-visualization-and-infographics-with-d3-alberto-cairo-scott-murray
 
@@ -149,8 +145,6 @@ go through [4_d3_data_datum.html](4_d3_data_datum.html).
 
 ** go through [5_emissions_line_chart.html](5_emissions_line_chart.html)
 
-<img src="d3_chart_structure.png">
-
 ### 6. get labels 添加标签
 
 ** Line chart label use in NYT，繁杂中突出重点 https://www.nytimes.com/interactive/2016/01/12/upshot/david-bowie-songs-that-fans-are-listening-most-heroes-starman-major-tom.html
@@ -250,6 +244,8 @@ go through [7_emissions_line_tooltip.html](7_emissions_line_tooltip.html)
 
 * headline, paragraph brief explanation, source and credit 5pt
 
-* 精细化处理，style，辅助线，等等，参考我第一堂课给你们的那些优秀媒体的作品链接
+* 精细化处理，style，辅助线，等等，参考我第一堂课给你们的那些优秀媒体的作品链接 
 
 * 迟交-5pt
+
+* 思考：selection.attr 与 selection.style的区别？
