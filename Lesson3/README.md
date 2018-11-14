@@ -232,9 +232,9 @@ go through [7_emissions_line_tooltip.html](7_emissions_line_tooltip.html)
 
 **Homework**: 
 
-1. 给上节课作业的散点图加悬浮框，显示你觉得重要的信息，加上引导读者去进行悬浮操作的文字 (15pt)
+1. 给上节课作业的散点图加悬浮框，显示你觉得重要的信息，加上引导读者去进行悬浮操作的文字，new gist "Lesson 3 scatter with tooltip" (15pt)
 
-2. Make a line chart (one line) any time series data from unicef https://data.unicef.org/resources/resource-type/datasets/ (20pt)
+2. Make a line chart (one line) any time series data from unicef https://data.unicef.org/resources/resource-type/datasets/, gist subline "Lesson3 line chart" (20pt)
 
 * x、y axis title/unit 5pt
 
@@ -248,4 +248,4 @@ go through [7_emissions_line_tooltip.html](7_emissions_line_tooltip.html)
 
 * 迟交-5pt
 
-* 思考：selection.attr 与 selection.style的区别？
+* 思考：selection.attr 与 selection.style的区别？欢迎邮件哦~
