@@ -145,6 +145,8 @@ go through [4_d3_data_datum.html](4_d3_data_datum.html).
 
 ** go through [5_emissions_line_chart.html](5_emissions_line_chart.html)
 
+** 脑中有网画d3，给你网: open [homework2_line_chart.html](homework2_line_chart.html)
+
 ### 6. get labels 添加标签
 
 ** Line chart label use in NYT，繁杂中突出重点 https://www.nytimes.com/interactive/2016/01/12/upshot/david-bowie-songs-that-fans-are-listening-most-heroes-starman-major-tom.html
@@ -248,4 +250,4 @@ go through [7_emissions_line_tooltip.html](7_emissions_line_tooltip.html)
 
 * 迟交-5pt
 
-* 思考：selection.attr 与 selection.style的区别？欢迎邮件哦~
+3. 思考：selection.attr 与 selection.style的区别？欢迎邮件哦~
