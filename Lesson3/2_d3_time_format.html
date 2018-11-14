@@ -1,0 +1,93 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>d3 time format</title>
+        <style>
+
+        </style>
+    </head>
+
+    <body>
+
+        <h1>D3 Time Format</h1>
+
+		<p>d3里的时间转换器：[d3.parseTime()] js能读懂的时间 ~ 人能读懂的时间 [d3.timeFormat()]</p>
+
+		<p>https://github.com/d3/d3-time-format/blob/master/README.md#timeFormat</p>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+		
+		// new Date: js自带语法，get当前时间
+    	var date = new Date; 
+		console.log(date) // www mmm dd yyyy h:m:s 时区 (??标准时间)
+
+		// d3.timeFormat(一些时间表达的固定格式，即"%...")
+
+		// 英文惯用的 月日,年：
+		var formatTime = d3.timeFormat("%B %d, %Y");
+		// console.log(formatTime(date)) //month day, year
+
+		// 英文 月日：
+		var formatTime = d3.timeFormat("%B %d")
+		// console.log(formatTime(date)) //month day
+
+		//more→ https://bl.ocks.org/zanarmstrong/ca0adb7e426c12c06a95
+		var formatlist = ["%Y-%m-%d", "%m/%d/%Y", "%H:%M","%H:%M %p", "%B %d", "%d %b", "%d-%b-%y", "%S s", "%M m", "%H h", "%a", "%A", "%d d", "%b", "%m/%Y", 
+			"%b %Y", "%B", "%c", "%d", "%e", "%H", "%I", "%j", 
+			"%m", "%M", "%L", "%p", "%S", "%U", "%w", "%W", "%x", "%X", "%y", "%Z" 
+		];
+
+		// 一些常用的固定格式：
+		var formatMillisecond = d3.timeFormat(".%L"),
+		    formatSecond = d3.timeFormat(":%S"),
+		    formatMinute = d3.timeFormat("%I:%M"),
+		    formatHour = d3.timeFormat("%I %p"),
+		    formatDay = d3.timeFormat("%a %d"),
+		    formatWeek = d3.timeFormat("%b %d"),
+		    formatMonth = d3.timeFormat("%B"),
+		    formatYear = d3.timeFormat("%Y");
+
+		// console.log(".%L", formatMillisecond(date))
+		// console.log(":%S", formatSecond(date))
+		// console.log("%I:%M", formatMinute(date))
+		// console.log("%I %p", formatHour(date))
+		// console.log("a d",formatDay(date))
+		// console.log("b d",formatWeek(date))
+		// console.log("%B", formatMonth(date))
+		// console.log("%Y", formatYear(date))
+
+		
+		// 中文？ 其他语言？ https://github.com/d3/d3-time-format/tree/master/locale
+		// 方法1：直接加年月日
+		var formatTime = d3.timeFormat("%Y年%-m月%-d日")
+		// console.log(formatTime(date));
+
+		// 方法2：d3.timeFormatLocale().format("%...")
+		// 原因：很多情况下，不可以直译转化，比如星期三、周三、下午等等
+		var locale = d3.timeFormatLocale({
+			  "dateTime": "%x %A %X",
+			  "date": "%Y年%-m月%-d日",
+			  "time": "%H:%M:%S",
+			  "periods": ["上午", "下午"],
+			  "days": ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+			  "shortDays": ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+			  "months": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+			  "shortMonths": ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"]
+			})
+
+		var formatTime = locale.format("%A");
+		// console.log(formatTime(date))
+
+    </script>
+
+</html>

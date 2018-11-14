@@ -1,0 +1,194 @@
+<html lang="en">
+
+<!-- Revised from Wenzhi's code here. -->
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Lesson2 try bars</title>
+        <style>
+			body {
+				background-color: white;
+				}
+
+			h1 {
+				font-size: 28px;
+				margin-top:15px;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			p {
+				font-size: 18px;
+				margin: 10px 0 10px 0;
+				font-family: Garamond, Arial, sans-serif;
+			}
+
+            .credit {
+                color: #555555;
+                font-size: 14px;
+            }
+
+			svg {
+				background-color: #F5F5F5;
+			}
+			.bar {
+  				fill: steelblue;
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+			}
+
+            .yTitle {
+                font-size: 14px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h1>Unemployment rate</h1>
+		<p>2017 Unemployment rate (of total labor force, modeled ILO estimate) </p>
+ 		<p class="credit">By Pan Wenzhi</p>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+    	// write js code here
+		 
+		var fullWidth = 1200;
+		var fullHeight = 700;
+		var margin = {top:30, right:10, bottom:120, left:30};  //Top, right, bottom, left
+
+		var width = fullWidth - margin.left - margin.right;
+		var height = fullHeight - margin.top - margin.bottom;
+		
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", fullWidth)
+                    .attr("height", fullHeight);
+
+        var g = svg.append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var xScale = d3.scaleBand()
+                       .range([0, width])
+                       .padding(0.5); // 太挤了，所以把padding调大了！
+
+        var yScale = d3.scaleLinear()
+                       .range([height, 0]);
+
+        // 定义坐标轴
+        var xAxis = d3.axisBottom(xScale).tickSize(0); //ticks too busy...
+        var yAxis = d3.axisLeft(yScale)
+        			.tickFormat(function(d) {
+        							return d + "%";
+        						});
+           
+        d3.csv("data/1_unemployment_and_GDPgrowth.csv", function(error,data) {
+
+            if (error) throw error; //don't forget this.
+
+            console.log("original", data)
+
+            // 数字格式化
+            data.forEach(function(d){
+                d.Unemployment = + d.Unemployment;
+                // console.log("number", d.Unemployment)
+            })
+
+            // 排序
+            // 升序
+            data.sort(function(a,b){ return a.Unemployment - b.Unemployment; })
+            data.sort(function(a,b){ return d3.ascending(a.Unemployment, b.Unemployment);})
+            // 降序
+            data.sort(function(a,b){ return b.Unemployment - a.Unemployment; })
+            data.sort(function(a,b){ return d3.descending(a.Unemployment, b.Unemployment); })
+            
+            // console.log("sorted", data)
+
+            // 过滤掉0的数据
+            function noZero(d){ return d.Unemployment != 0; }
+            data = data.filter(noZero)
+            // data = data.filter(function(d){ return d.Unemployment != 0; })
+
+
+            // console.log("filtered",data)
+            
+            //good job here for using array.map()
+            xScale.domain(data.map(function(d) {return d.Country;}));
+            yScale.domain([0, d3.max(data, function(d) {return d.Unemployment;})]);
+
+            var rects = g.append("g")
+                .attr("class", "bars")
+                .selectAll("rect.bar")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "bar");
+
+            rects
+                .attr("x", function(d) { return xScale(d.Country);})
+                .attr("y", function(d) { return yScale(d.Unemployment);})
+                .attr("width", xScale.bandwidth())
+                .attr("height", function(d) {
+                    return height - yScale(d.Unemployment);
+                })
+                .append("title")
+                .text(function(d) {
+                    return d.Country + "'s 2017 unemployment rate is " + d.Unemployment;
+                });
+
+            g.append("g")
+                .attr("class", "x-axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+
+                // I don't remember how to change tick titles. What can I do? Let's see how to google...
+                .selectAll("text")
+                .attr("dy", ".85em")  //dy???
+                .attr("transform", "rotate(-45)")
+                .style("text-anchor", "end")
+                .style("font-size","6px") //但仍然很密集且看不清，所以真的实际应用中，这么多bar，不建议把名称都显示出来，除非纵向排，或者就用交互的方式折中。                     
+
+            g.append("g")
+                .attr("class", "y-axis")
+                .call(yAxis)
+                // .append("text")
+                // .attr("transform", "rotate(-90)")
+                // .attr("y", 6)
+                // .attr("dy", "0.71em")
+                // .attr("text-anchor", "end").text("比率"); I draw the title below
+
+            
+
+            // add label (axis title) to svg, not the big g
+            svg.append("text")
+                .attr("class", "yTitle")
+                .attr("transform", "translate(" + margin.left + " ," + margin.top + ")")
+                .style("text-anchor", "middle")
+                .attr("dy", "-10")
+                .text("Percent")
+         });
+
+ </script>
+
+</html>
+
+		
+		
+
+		

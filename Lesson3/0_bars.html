@@ -1,0 +1,137 @@
+<html lang="en">
+<!-- Wenzhi's code here. Really good job! -->
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Lesson2 try bars</title>
+        <style>
+			body {
+				background-color: white;
+				}
+
+			h1 {
+				font-size: 28px;
+				margin-top:15px;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			p {
+				font-size: 18px;
+				margin: 10px 0 10px 0;
+				font-family: Garamond, Arial, sans-serif;
+			}
+
+			svg {
+				background-color: #F5F5F5;
+			}
+			.bar {
+  				fill: steelblue;
+				}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+				font-size: 1px;
+			}
+        </style>
+    </head>
+
+    <body>
+
+        <h1>Unemployment rate</h1>
+
+		<p>2017 Unemployment rate (of total labor force, modeled ILO estimate) </p>
+ 		<p> made by Pan Wenzhi</p>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+    	// write js code here
+		 
+		var fullWidth = 1000;
+		var fullHeight = 600;
+		var margin = {top:30, right:10, bottom:25, left:50};  //Top, right, bottom, left
+
+		var width = fullWidth - margin.left - margin.right;
+		var height = fullHeight - margin.top - margin.bottom;
+		
+
+var svg = d3.select("body")
+            .append("svg")
+            .attr("width", fullWidth)
+            .attr("height", fullHeight)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var xScale = d3.scaleBand()
+               .range([0, width])
+               .padding(0.2);
+var yScale = d3.scaleLinear()
+               .range([height, 0]);
+// 定义坐标轴
+var xAxis = d3.axisBottom(xScale);
+var yAxis = d3.axisLeft(yScale)
+			.tickFormat(function(d) {
+							return d + "%";
+						});
+             
+
+        // 创建绘图区域
+
+           
+
+  d3.csv("data/0_unemployment_and_GDPgrowth.csv", function(data) {
+  xScale.domain(data.map(function(d) {return d.Country;}));
+  yScale.domain([0, d3.max(data, function(d) {return +d.Unemployment;})]);
+
+
+  svg.append("g")
+     .attr("class", "x-axis")
+     .attr("transform", "translate(0," + height + ")")
+     .call(xAxis);
+  
+
+  svg.append("g")
+     .attr("class", "y-axis")
+     .call(yAxis)
+     .append("text").attr("transform", "rotate(-90)")
+     .attr("y", 6).attr("dy", "0.71em")
+     .attr("text-anchor", "end").text("比率");
+
+  svg.append("g")
+     .attr("class", "bars")
+     .selectAll(".bar")
+     .data(data).enter()
+     .append("rect").attr("class", "bar")
+     .attr("x", function(d) { return xScale(d.Country);})
+     .attr("width", xScale.bandwidth())
+     .attr("y", function(d) { return yScale(d.Unemployment);})
+     .attr("height", function(d) {
+       return height - yScale(d.Unemployment);
+   })
+     .append("title")
+				.text(function(d) {
+					return d.Country + "'s 2017 unemployment rate is " + d.Unemployment;
+				});
+     });
+
+ </script>
+
+</html>
+
+		
+		
+
+		

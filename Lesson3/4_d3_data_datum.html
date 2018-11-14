@@ -1,0 +1,74 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>d3 time Parse</title>
+        <style>
+            .new {
+                color: grey;
+            }
+
+            .data {
+                color: steelblue;
+            }
+
+            .datum {
+                color: darkred;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h2>Playing with Data() / Datum() and Selections</h2>
+
+        <div class="another">I'm a div for use later.</div>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+		
+        var mydata= ["this is one paragraph", "apples", "another para", "pears", "oranges", 33, 24];
+
+        var mydatum = ["this is for a div", 35, "this is too", "datum not data"];
+
+        d3.select("body")
+            .append("p")
+            .attr("class", "new")
+            .text("This is a new paragraph! No data join, just an append.")
+
+        console.log("is there data here?", d3.select("p.new").data());
+
+        d3.select("body").selectAll("p.data")
+            .data(mydata)
+            .enter()
+            .append("p")
+            .attr("class", "data")
+            .text(function(d) {
+                console.log("the entered data item is", d);
+                // return d;
+            });
+            
+        console.log("all the data on the p's:", d3.selectAll("p").data());
+
+        d3.select("div.another")
+            .datum(mydatum)
+            // .enter()
+            .append("p") // you can append
+            .attr("class", "datum")
+            .text(function(d) {  // we have access to the data item
+                return d;
+            });
+
+        console.log("data on the div:", d3.selectAll("div.another").data());
+
+    </script>
+
+</html>
