@@ -1,0 +1,279 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <title>Scatter Data Transition Toggle</title>
+        <style>
+	        body {
+				background-color: white;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			h1 {
+				font-size: 24px;
+				margin: 0;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 10px 0 10px 0;
+			}
+
+			.selected {
+				background-color: pink;
+			}
+
+			svg {
+				background-color: white;
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: #ccc;
+				stroke-width: 1px;
+			}
+
+			.line {
+				fill: none;
+				stroke: black;
+				stroke-width: 1px;
+				stroke-opacity: 80%;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+				line-height: 1em;
+			}
+
+			.map_note {
+				padding-top: 120px;
+				padding-left: 30px;
+			}
+
+			.tooltip {
+				position: absolute;
+				z-index: 10;
+			}
+
+			.tooltip p {
+				background-color: white;
+				border: none;
+				padding: 2px;
+			}
+
+			/* this is an adjustment to bootstrap's row for my page */
+			.row {
+				padding-top: 50px;
+			}
+
+			/* this is an adjustment to bootstrap for my page */
+			.btn-group {
+				padding-top: 20px;
+			}
+
+		</style>
+    </head>
+
+    <body>
+
+        <div class="container">
+			<div class="row">
+				<div class="col-md-5">
+					<h1>Measles in Sub Saharan Africa</h1>
+					<div class="btn-group" role="group" aria-label="...">
+						<button type="button" class="btn btn-default" id="Cameroon">Cameroon</button>
+						<button type="button" class="btn btn-default" id="Congo">Congo</button>
+						<button type="button" class="btn btn-default" id="Ethiopia">Ethiopia</button>
+						<button type="button" class="btn btn-default" id="Mozambique">Mozambique</button>
+						<button type="button" class="btn btn-default" id="Nigeria">Nigeria</button>
+					</div>
+					<div id="svg"></div>
+					<p>Source: <a href="http://www.unicef.org/">UNICEF</a></p>
+				</div>
+
+				<div class="col-md-5 col-md-offset-2">
+					<div class="map_note">
+						<p>This map is just helpful, it doesn't do anything yet.</p>
+						<img src="img/subsaharan_stamen_map.png" class="img-responsive" alt="SubSaharan Map image" height="600" width="600">
+					</div>
+				</div>
+			</div>
+		</div>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+    	//Dimensions and padding
+		var fullwidth = 500;
+		var fullheight = 450;
+		var margin = {top: 20, right: 10, bottom: 40, left: 50};
+
+		var width = fullwidth - margin.left - margin.right;
+		var height = fullheight - margin.top - margin.bottom;
+
+		var svg = d3.select("#svg")
+					.append("svg")
+					.attr("width", fullwidth)
+					.attr("height", fullheight)
+					.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		var dateParse = d3.timeParse("Year %Y");
+		var dateFormat = d3.timeFormat("Year %Y");
+		var outputFormat = d3.timeFormat("%Y");
+
+		// My shortcut for the scale is to list the first and last only - will set the extents.
+		// Also, I set the earlier year to 1999 to get a little spacing on the X axis.
+		var years = ["Year 1999", "Year 2013"];
+
+		var xScale = d3.scaleTime()
+						.range([ 0, width ])
+						.domain(
+							d3.extent(years, function(d) {
+							return dateParse(d);
+							}));
+
+		var yScale = d3.scaleLinear()
+						.range([ 0, height ]);
+
+		var xAxis = d3.axisBottom(xScale)
+						.ticks(5)
+						.tickFormat(function(d) {
+							return outputFormat(d);
+						})
+
+		var yAxis = d3.axisRight(yScale)
+						.tickSize(width)
+
+		var line = d3.line()
+						.x(function(d) {
+							return xScale(dateParse(d.Year));
+						})
+						.y(function(d) {
+							return yScale(+d.Measles);
+						});
+
+		var tooltip = d3.select("body")
+					  	.append("div")
+					  	.attr("class", "tooltip");
+
+
+		d3.csv("data/deaths_04yearsold_excerpt.csv", function(error, data) {
+
+
+			var dataset =  d3.nest()
+					.key(function(d) {
+						return d.Country;
+					})
+					.sortValues(function (a, b) { return dateParse(a.Year) - dateParse(b.Year)})
+					.entries(data);
+
+			// doing the max on the unnested data - easier to get the full set of Measles that way!
+			yScale.domain([
+				d3.max(data, function(d) {
+						return +d.Measles;
+				}),
+				0
+			]);
+
+
+			function get_values_for_country(country) {
+				//过滤器：拿到相应“国家”的数据
+				if (country === "Congo") {
+					country = "Democratic Republic of the Congo";
+				}
+
+				return dataset.filter(function (d) {
+							return d.key == country;
+						})[0].values;
+			}
+
+			// 初始数据 Congo
+			var congo = get_values_for_country("Democratic Republic of the Congo");
+
+			svg.selectAll("path")
+				.data( [congo] )
+				.enter()
+				.append("path")
+				.attr("class", "line")
+				.attr("d", line);
+
+			d3.select("button#Congo").classed("selected", true);
+
+			// svg.append("g")
+			// 	.attr("class", "x axis")
+			// 	.attr("transform", "translate(0," + height  + ")")
+			// 	.call(xAxis);
+
+			// svg.append("g")
+			// 	.attr("class", "y axis")
+			// 	.call(yAxis);
+
+			svg.append("g")
+			    .attr("transform", "translate(0," + height + ")")
+			    .call(customXAxis);
+
+			svg.append("g")
+			    .call(customYAxis);
+
+			function customXAxis(g) {
+			  g.call(xAxis);
+			  g.select(".domain").remove();
+			}
+
+			function customYAxis(g) {
+			  g.call(yAxis);
+			  g.select(".domain").remove();
+			  g.selectAll(".tick:not(:last-of-type) line").attr("stroke", "#777").attr("stroke-dasharray", "4,2");
+			  g.selectAll(".tick text").attr("x", 4).attr("dy", -4);
+			}
+
+			d3.selectAll("button").on("click", function() {
+				
+				//命名：当前这根线、点击的这个btn、相应的btn的id
+				var selectedline = d3.select("path.line");
+				var thisButton = d3.select(this);
+				var thisId = d3.select(this).attr("id");
+
+				// 拿到相应id（国家）的数据
+				var newdata = get_values_for_country(thisId);  // the id has to match the country name for this to work.
+
+				// 改变btn样式
+				d3.selectAll("button").classed("selected", false);
+				thisButton.classed("selected", true);
+
+				// 把这根线过渡到对的数据
+				selectedline
+					.transition()
+					.duration(2000)
+					.attr("d", line(newdata));
+
+				/* 不然的话就要连着写四遍这个：
+				if (thisButton.attr("id") === "angola") {
+					console.log("angola");
+					var newdata = angola; // i had saved out the values for angola already.
+					d3.select("button#congo").classed("selected", false);
+				}
+
+				etc. -- 
+				*/
+
+
+			});
+
+
+		}); // end of data csv
+
+    </script>
+
+</html>

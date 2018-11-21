@@ -1,0 +1,269 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <title>Scatter Data Transition Toggle</title>
+        <style>
+			body {
+				background-color: white;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			h1 {
+				font-size: 24px;
+				margin: 0;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 10px 0 0 0;
+			}
+
+			.clicker {
+				font-weight: bolder;
+				color: black;
+				cursor: pointer;
+			}
+
+			.buttons {
+				margin-left: 500px;
+				padding: 20px;
+			}
+
+			.selected {
+				background-color: #eee;
+			}
+
+			.chart-title {
+				font-size: 14pt;
+				font-weight: bolder;
+				color: black;
+				margin-left: 300px;
+			}
+
+			svg {
+				background-color: white;
+			}
+
+			.dots {
+				fill: steelblue;
+			}
+
+			.highlighted {
+				fill: orange;
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+
+			.xlabel{
+				font-size: 15px;
+				fill: gray;
+			}
+			.ylabel{
+				font-size: 15px;
+				fill: gray;
+			}
+        </style>
+    </head>
+
+    <body>
+
+        <h1>Books and Toys at Home by Richest 20% and Poorest 20%</h1>
+
+		<p>Source: World Development Indicators, <a href="http://datacatalog.worldbank.org">World Bank SOWC All Countries Update 214</a>, latest data 2013</p>
+
+		<div class="buttons">
+		<button class="clicker" id="toys">Show Toys!</button>
+		<button class="clicker" id="books">Show Books!</button>
+		</div>
+
+		<p class="chart-title">Books at Home</p>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+    	var fullwidth = 700;
+		var fullheight = 600;
+
+		var margin = { top: 20, right: 10, bottom: 50, left: 50 };
+
+		var width = fullwidth - margin.left - margin.right;
+		var height = fullheight - margin.top - margin.bottom;
+
+		var svg = d3.select("body")
+					.append("svg")
+					.attr("width", fullwidth)
+					.attr("height", fullheight)
+					.append("g")
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		var dotRadius = 3; 
+
+		var xScale = d3.scaleLinear()
+							.range([ 0, width ])
+							.domain([-2,100]);
+
+		var yScale = d3.scaleLinear()
+							.range([ height, 0 ])
+							.domain([-2,100]);
+
+		var xAxis = d3.axisBottom(xScale).ticks(10);  
+
+		var yAxis = d3.axisLeft(yScale);
+
+		
+
+		d3.csv("data/books_toys_by_rich_poor2013.csv", draw);
+
+
+		function draw(error, data) {
+
+			if (error) throw error;
+
+			var circles = svg.selectAll("circle")
+						.data(data)
+						.enter()
+						.append("circle");
+
+
+			circles.attr("cx", function(d) {
+					return xScale(+d.poorBooks);
+				})
+				.attr("cy", function(d) {
+					return yScale(+d.richBooks);
+				})
+				.attr("class", function(d){
+					// highlighting some interesting outliers
+					if (d.country === "Ukraine" || d.country === "Mali" || d.country == "Morocco") {
+						return "highlighted";
+					}
+					else {
+						return "dots";
+					}
+				})
+				.append("title")
+				.text(function(d) {
+					return d.country + " reports books for " + d.poorBooks + "% kids in poor areas and " + d.richBooks + "% in rich areas.";
+				});
+
+			circles.sort(function(a, b) {
+					return d3.ascending(+a.urban, +b.urban);
+				})
+				.transition()
+				.delay(function(d, i) {
+					return i * 10;
+				})
+				.duration(500)  
+				.attr("r", dotRadius);
+
+			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis);
+
+			svg.append("g")
+				.attr("class", "y axis")
+				.call(yAxis);
+
+			svg.append("text")
+				.attr("class", "xlabel")
+				.attr("transform", "translate(" + (width / 2) + " ," +
+							(height + 20) + ")")
+				.style("text-anchor", "middle")
+				.attr("dy", "12")
+				.text("Poorest 20%");
+
+			svg.append("text")
+				.attr("class", "ylabel")
+				.attr("transform","rotate(-90) translate(" + (-height/2) + ",0)")
+				.style("text-anchor", "middle")
+				.attr("dy", -25)
+				.text("Richest 20%");
+
+			// NEW HERE
+			// 1. 初始状态下被选择的button样式
+			d3.select("button#books").classed("selected", true);
+
+			// 2. give click func to btns:
+			d3.selectAll("button.clicker").on("click", function() {
+
+				// 2.1. 获取重要info：“当下”元素的id
+				var whichbutton = d3.select(this).attr("id");
+
+				// 2.2. change btns 样式
+				d3.select(this).classed("selected", true);
+
+				if (whichbutton === "toys") {
+					d3.select("button#books").classed("selected", false);
+				} else {
+					d3.select("button#toys").classed("selected", false);
+				}
+				
+				// 2.3. change circles 位置
+				// whichbutton 会变成 "toys" 或者 "books"
+				// 调用相关的那列数据
+				circles
+					.transition()
+					.duration(2000)
+					.attr("cx", function(d) {
+						if (whichbutton === "toys") {
+							return xScale(+d.poorToys);
+						}
+						else { 
+							return xScale(+d.poorBooks);
+						}
+					})
+					.attr("cy", function(d) {
+						if (whichbutton === "toys") {
+							return yScale(+d.richToys);
+						} else {
+							return yScale(+d.richBooks);
+						}
+					});
+
+				// 2.4. 换掉之前的title
+				circles.selectAll("title").remove();
+				circles
+					.append("title")
+					.text(function(d) {
+						if (whichbutton === "toys") {
+							return d.country + " reports toys for " + d.poorToys + "% kids in poor areas and " + d.richToys + "% in rich areas.";
+						} else {
+							return d.country + " reports books for " + d.poorBooks + "% kids in poor areas and " + d.richBooks + "% in rich areas.";
+						}
+					});
+
+				// 2.5. 换掉之前title中的文字
+				if (whichbutton === "toys") {
+					d3.select("p.chart-title").text("Toys at Home");
+				} else {
+					d3.select("p.chart-title").text("Books at Home");
+				}
+
+
+			}); // end clicker function
+
+
+		};
+
+    </script>
+
+</html>

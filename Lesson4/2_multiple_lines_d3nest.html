@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<!-- Modification of an example by Scott Murray from Knight D3 course -->
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Line Chart with Multiple Lines</title>
+		<style type="text/css">
+
+			body {
+				background-color: white;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			h1 {
+				font-size: 24px;
+				margin: 0;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 10px 0 0 0;
+			}
+
+			svg {
+				background-color: white;
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				stroke-width: 1px;
+			}
+
+			.line {
+				fill: none;
+				stroke: gray;
+				stroke-width: 1px;
+				stroke-opacity: 80%;
+			}
+
+			.line.unfocused{
+				stroke-opacity: 40%;
+			}
+
+			.line.focused {
+				stroke-width: 2px;
+				stroke-opacity: 100%;
+				stroke: black;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+
+			.tooltip {
+				position: absolute;
+				z-index: 10;
+			}
+
+			.tooltip p {
+				background-color: white;
+				border: none;
+				padding: 2px;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<h1>Children's Mortality Rates Due to Measles</h1>
+
+		<p>Source: UNICEF. Roll-over a line to see which country is plotted.</p>
+
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
+
+		<script type="text/javascript">
+
+
+			//Dimensions and padding
+			var fullwidth = 700;
+			var fullheight = 600;
+			var margin = {top: 20, right: 10, bottom: 40, left:100};
+
+			var width = fullwidth - margin.left - margin.right;
+			var height = fullheight - margin.top - margin.bottom;
+
+			var svg = d3.select("body")
+						.append("svg")
+						.attr("width", fullwidth)
+						.attr("height", fullheight)
+						.append("g")
+						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var dateFormat = d3.time.format("Year %Y");
+			var outputFormat = d3.time.format("%Y");
+
+			//d3.scaleTime() & d3.time.scale()
+
+			var xScale = d3.time.scale()
+								.range([ 0, width ]);
+
+			//d3.scaleLinear() & d3.scale.linear()
+
+			var yScale = d3.scale.linear()
+								.range([ 0, height ]);
+
+			//d3.axisBottom(xScale)
+
+			var xAxis = d3.svg.axis()
+							.scale(xScale)
+							.orient("bottom")
+							.ticks(15)
+							.tickFormat(function(d) {
+								return outputFormat(d);
+							})
+							.innerTickSize([0]);
+
+			var yAxis = d3.svg.axis()
+							.scale(yScale)
+							.orient("left")
+							.innerTickSize([0]);
+
+
+			// d3.line()
+
+			var line = d3.svg.line()
+				.x(function(d) {
+					return xScale(dateFormat.parse(d.Year));
+				})
+				.y(function(d) {
+					return yScale(+d.Measles);
+				});
+
+
+			var tooltip = d3.select("body")
+					      	.append("div")
+					      	.attr("class", "tooltip");
+
+			
+
+			d3.csv("data/deaths_04yearsold_excerpt.csv", function(error, data) {
+
+				console.log("original data", data);
+
+				var years = ["Year 2000", "Year 2013"];
+
+				// notice what happens if you don't sort these :)
+				var dataset =  d3.nest()
+						.key(function(d) {
+							return d.Country;
+						})
+						.sortValues(function (a, b) { return dateFormat.parse(a.Year) - dateFormat.parse(b.Year)})
+						.entries(data);
+
+				//newly restructured dataset 
+				console.log("nested data", dataset);
+
+				//Set scale domains - max and mine of the years - we cheated, just the edges
+				xScale.domain(
+					d3.extent(years, function(d) {
+						return dateFormat.parse(d);
+					}));
+
+				yScale.domain([
+					d3.max(data, function(d) {
+							return +d.Measles;
+					}),
+					0
+				]);
+
+				//Make a group for each country
+				var groups = svg.selectAll("g.linesgroup")
+					.data(dataset)
+					.enter()
+					.append("g")
+					.attr("class", "linesgroup");
+
+				//Within each group, create a new line/path,
+				// using the d.values array which was created
+				groups.selectAll("path.line")
+					.data(function(d) { 
+						//console.log("values", d.values);
+						return [d.values]; 
+					})
+					.enter()
+					.append("path")
+					.attr("class", "line")
+					.attr("d", line);
+
+
+				//Axes
+				svg.append("g")
+					.attr("class", "x axis")
+					.attr("transform", "translate(0," + height + ")")
+					.call(xAxis);
+
+				svg.append("g")
+					.attr("class", "y axis")
+					.call(yAxis);
+
+				d3.selectAll("g.linesgroup")
+					.on("mouseover", mouseoverFunc)
+					.on("mouseout", mouseoutFunc)
+					.on("mousemove", mousemoveFunc);  
+
+
+			}); // end of data csv
+
+	function mouseoverFunc(d) {
+
+		d3.selectAll("path.line").classed("unfocused", true);
+		d3.select(this).select("path.line").classed("unfocused", false).classed("focused", true);
+		tooltip
+			.style("display", null) 
+			.html("<p>" + d.key + "</p>");
+	}
+
+	function mouseoutFunc() {
+			d3.selectAll("path.line").classed("unfocused", false).classed("focused", false);
+			tooltip.style("display", "none");  // this sets it to invisible!
+	}
+
+	function mousemoveFunc(d) {
+		tooltip
+			.style("top", (d3.event.pageY - 10) + "px" )
+			.style("left", (d3.event.pageX + 10) + "px");
+	}
+
+
+
+		</script>
+
+	</body>
+</html>
