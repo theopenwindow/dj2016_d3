@@ -26,25 +26,25 @@ hello~ Venti Americano thank you :)
 ```
 	// multiple lines的数据需要structure like this:
 	[
-						{
-							country: "Australia",
-							emissions: [
-										{ year: 1961, amount: 90589.568 },
-										{ year: 1962, amount: 94912.961 },
-										{ year: 1963, amount: 101029.517 },
-										…
-									   ]
-						},
-						{
-							country: "Bermuda",
-							emissions: [
-										{ year: 1961, amount: 176.016 },
-										{ year: 1962, amount: 157.681 },
-										{ year: 1963, amount: 150.347 },
-										…
-									   ]
-						},
+		{
+			country: "Australia",
+			emissions: [
+						{ year: 1961, amount: 90589.568 },
+						{ year: 1962, amount: 94912.961 },
+						{ year: 1963, amount: 101029.517 },
 						…
+					   ]
+		},
+		{
+			country: "Bermuda",
+			emissions: [
+						{ year: 1961, amount: 176.016 },
+						{ year: 1962, amount: 157.681 },
+						{ year: 1963, amount: 150.347 },
+						…
+					   ]
+		},
+		…
 	]
 ```
 
@@ -68,9 +68,8 @@ var dataset =  d3.nest()
 
 * 加深理解
 
-** grouping data http://learnjsdata.com/group_data.html
-
-** more about nest, rollup, and sorting http://bl.ocks.org/phoebebright/raw/3176159/
+    ** grouping data http://learnjsdata.com/group_data.html
+    ** more about nest, rollup, and sorting http://bl.ocks.org/phoebebright/raw/3176159/
 
 
 ### 3. 关于数据处理，munging data
@@ -108,12 +107,14 @@ var dataset =  d3.nest()
 
 * 让hover这件事无比顺滑：voronoi “泰森多边形法”
 
-Reference and how-to's:
+* Reference and how-to's:
+
 ** Mike's block Multi-Line Voronoi https://bl.ocks.org/mbostock/8033015
 ** 教程: http://www.visualcinnamon.com/2015/07/voronoi.html (note:另一种tooltip: Bootstrap lib)
 ** Demo: Zan Armstrong's temperature lines: http://bl.ocks.org/zanarmstrong/38d7f79f61a03acc0ef0
 
-voronoi 机场地图:
+* voronoi 机场地图:
+
 ** US Airports: http://bl.ocks.org/mbostock/4360892
 ** Arc Aiport map: http://bl.ocks.org/mbostock/7608400, https://mbostock.github.io/d3/talk/20111116/airports.html
 ** World Airports: https://www.jasondavies.com/maps/voronoi/airports/
@@ -232,7 +233,7 @@ Have a look at Bootstrap, in very common usage in industry:
 * https://getbootstrap.com/docs/3.3/css/
 * https://getbootstrap.com/docs/3.3/css/#grid-example-basic
 
-可以尝试用在本周作业中.  [lines_transition.html](lines_transition.html) , though still an ugly page ...
+可以尝试用在本周作业中.  [9_lines_transition.html](9_lines_transition.html) , though still an ugly page ...
 
 注意: 用bootstrap的时候就不要用d3 tooltip了，bootstrap有自己的tooltip(.~)，如果一定要用改一下class ".mytooltip" or something else. 
 
@@ -244,25 +245,17 @@ Have a look at Bootstrap, in very common usage in industry:
 
 * 网页项目，自定目标读者
 
-评分标准 400’：
+* 评分标准 400’：
 
-* 图表类型: 使用3个以上图表类型，图表类型的选择要适合数据和作者意图。 80‘
-
-* 交互: 在需要的地方有过渡、高亮、文本提示框的效果，以及适当处使用排序、过滤、动画、数据更新等。80’
-
-* 文字: 行文流畅无语病或错字，能够和数据图相互配合，起到解释数据图、明确数据图意图指向的作用。40‘
-
-* 故事线: 有意义、有趣的故事线，形成有独到见解的故事。40’
-
-* 数据分析: 具有有趣的发现，数据分析合理到位。40‘
-
-* 图表元素: 标签、坐标轴、图例、图注标注正确。 40‘
-
-* 视觉设计: 色彩搭配和谐, 具有吸引力, 重点突出。40’
-
-* 页面排版: 正确使用代码进行排版,页眉页脚设计完备，项目信息、数据来源、作者署名完备。20’
-
-* UX设计: 读者可以被正确引导，知道哪里该滑动、哪里该点击。20‘
+    ** 图表类型: 使用3个以上图表类型，图表类型的选择要适合数据和作者意图。 80‘
+    ** 交互: 在需要的地方有过渡、高亮、文本提示框的效果，以及适当处使用排序、过滤、动画、数据更新等。80’
+    ** 文字: 行文流畅无语病或错字，能够和数据图相互配合，起到解释数据图、明确数据图意图指向的作用。40‘
+    ** 故事线: 有意义、有趣的故事线，形成有独到见解的故事。40’
+    ** 数据分析: 具有有趣的发现，数据分析合理到位。40‘
+    ** 图表元素: 标签、坐标轴、图例、图注标注正确。 40‘
+    ** 视觉设计: 色彩搭配和谐, 具有吸引力, 重点突出。40’
+    ** 页面排版: 正确使用代码进行排版,页眉页脚设计完备，项目信息、数据来源、作者署名完备。20’
+    ** UX设计: 读者可以被正确引导，知道哪里该滑动、哪里该点击。20‘
 
 
 
@@ -279,9 +272,9 @@ Have a look at Bootstrap, in very common usage in industry:
 
 * Mike的update三部曲：
 
-General Update Pattern https://bl.ocks.org/mbostock/3808218
-Key Functions https://bl.ocks.org/mbostock/3808221
-Update Transitions https://bl.ocks.org/mbostock/3808234
+    ** General Update Pattern https://bl.ocks.org/mbostock/3808218
+    ** Key Functions https://bl.ocks.org/mbostock/3808221
+    ** Update Transitions https://bl.ocks.org/mbostock/3808234
 
 **Homework**: 
 
@@ -290,25 +283,17 @@ Update Transitions https://bl.ocks.org/mbostock/3808234
 使用UNICEF数据，或者和你final project相关的数据，多组时间序列数据。
 
 * Lines 10'
-
-* 要有mouseover，引出线或点的变化，加上tooltip，10’
-
-* Label the outlier lines in the right margin (the highest or lowest, ones that are different) 用简短文字标出 5‘
-
-* A short description and identify the source above your chart. 5’
-
-* 加分项：用voronoi加mouseover 15pt
-
-* gist subject: Lesson4 Multiple Lines
+* 要有mouseover，引出线或点的变化，加上tooltip，10'
+* Label the outlier lines in the right margin (the highest or lowest, ones that are different) 用简短文字标出 5'
+* A short description and identify the source above your chart. 5'
+* 加分项：用voronoi加mouseover 15'
+* gist subject: "Lesson4 Multiple Lines"
 
 2. Transition Plot With Buttons** (20pt) 
 
 * 找一些有趣的line chart/scatter plot/Bars，做数据转换过渡。 （同类型图表中的数据转换）
-
 * 数据条数相等，没有丢失或多余数据
-
-* 加分项：用bootstrap，排版优秀，最多可加10‘
-
-* gist subject: Lesson4 Transition Plot
+* 加分项：用bootstrap，排版优秀 10'
+* gist subject: "Lesson4 Transition Plot"
 
 
