@@ -69,6 +69,7 @@ var dataset =  d3.nest()
 * 加深理解
 
     ** grouping data http://learnjsdata.com/group_data.html
+    
     ** more about nest, rollup, and sorting http://bl.ocks.org/phoebebright/raw/3176159/
 
 
@@ -109,21 +110,21 @@ var dataset =  d3.nest()
 
 * Reference and how-to's:
 
-** Mike's block Multi-Line Voronoi https://bl.ocks.org/mbostock/8033015
+    ** Mike's block Multi-Line Voronoi https://bl.ocks.org/mbostock/8033015
 
-** 教程: http://www.visualcinnamon.com/2015/07/voronoi.html (note:另一种tooltip: Bootstrap lib)
+    ** 教程: http://www.visualcinnamon.com/2015/07/voronoi.html (note:另一种tooltip: Bootstrap lib)
 
-** Demo: Zan Armstrong's temperature lines: http://bl.ocks.org/zanarmstrong/38d7f79f61a03acc0ef0
+    ** Demo: Zan Armstrong's temperature lines: http://bl.ocks.org/zanarmstrong/38d7f79f61a03acc0ef0
 
 * voronoi 机场地图:
 
-** US Airports: http://bl.ocks.org/mbostock/4360892
+    ** US Airports: http://bl.ocks.org/mbostock/4360892
 
-** Arc Aiport map: http://bl.ocks.org/mbostock/7608400, https://mbostock.github.io/d3/talk/20111116/airports.html
+    ** Arc Aiport map: http://bl.ocks.org/mbostock/7608400, https://mbostock.github.io/d3/talk/20111116/airports.html
 
-** World Airports: https://www.jasondavies.com/maps/voronoi/airports/
+    ** World Airports: https://www.jasondavies.com/maps/voronoi/airports/
 
-** World Capitals: https://www.jasondavies.com/maps/voronoi/capitals/
+    ** World Capitals: https://www.jasondavies.com/maps/voronoi/capitals/
 
 
 ### 6. lines with interpolation 差值
@@ -286,7 +287,9 @@ Have a look at Bootstrap, in very common usage in industry:
 * Mike的update三部曲：
 
     ** General Update Pattern https://bl.ocks.org/mbostock/3808218
+
     ** Key Functions https://bl.ocks.org/mbostock/3808221
+
     ** Update Transitions https://bl.ocks.org/mbostock/3808234
 
 **Homework**: 
