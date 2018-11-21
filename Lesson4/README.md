@@ -69,7 +69,7 @@ var dataset =  d3.nest()
 * 加深理解
 
     ** grouping data http://learnjsdata.com/group_data.html
-    
+
     ** more about nest, rollup, and sorting http://bl.ocks.org/phoebebright/raw/3176159/
 
 
@@ -188,11 +188,11 @@ Optional Academic Research: http://vis.berkeley.edu/papers/animated_transitions/
 
 * 点击变换数据 [7_scatter_data_transition.html](7_scatter_data_transition.html) 
 
-可跟踪高亮点（middle point)。这个例子中，点击过渡只能变换一次
+    可跟踪高亮点（middle point)。这个例子中，点击过渡只能变换一次
 
 * 两套数据间可切换 [8_scatter_data_transition_toggle.html](8_scatter_data_transition_toggle.html)
 
-用一套if-statements get到被点击的button里面的value，再决定transition到哪一组数据
+    用一套if-statements get到被点击的button里面的value，再决定transition到哪一组数据
 
 ````
 <button class="clicker" id="toys">Show Toys!</button>
@@ -212,7 +212,7 @@ d3.selectAll("button.clicker").on("click", function() {
 
 * N组数据切换：transition line [9_lines_transition.html](9_lines_transition.html)
 
-(using Bootstrap for some CSS layout and a map image.)
+    (using Bootstrap for some CSS layout and a map image.)
 
 ````
 d3.selectAll("button").on("click", function() {
@@ -239,7 +239,7 @@ Have a look at Bootstrap, in very common usage in industry:
 * https://getbootstrap.com/docs/3.3/css/
 * https://getbootstrap.com/docs/3.3/css/#grid-example-basic
 
-可以尝试用在本周作业中.  [9_lines_transition.html](9_lines_transition.html) , though still an ugly page ...
+可以尝试用在本周作业中，如[9_lines_transition.html](9_lines_transition.html) , though still an ugly page ...
 
 注意: 用bootstrap的时候就不要用d3 tooltip了，bootstrap有自己的tooltip(.~)，如果一定要用改一下class ".mytooltip" or something else. 
 
@@ -253,23 +253,23 @@ Have a look at Bootstrap, in very common usage in industry:
 
 * 评分标准 400’：
 
-    ** 图表类型: 使用3个以上图表类型，图表类型的选择要适合数据和作者意图。 80‘
+    ** 图表类型: 使用3个以上图表类型，图表类型的选择要适合数据和作者意图。 80'
 
-    ** 交互: 在需要的地方有过渡、高亮、文本提示框的效果，以及适当处使用排序、过滤、动画、数据更新等。80’
+    ** 交互: 在需要的地方有过渡、高亮、文本提示框的效果，以及适当处使用排序、过滤、动画、数据更新等。80'
 
-    ** 文字: 行文流畅无语病或错字，能够和数据图相互配合，起到解释数据图、明确数据图意图指向的作用。40‘
+    ** 文字: 行文流畅无语病或错字，能够和数据图相互配合，起到解释数据图、明确数据图意图指向的作用。40'
 
-    ** 故事线: 有意义、有趣的故事线，形成有独到见解的故事。40’
+    ** 故事线: 有意义、有趣的故事线，形成有独到见解的故事。40'
 
-    ** 数据分析: 具有有趣的发现，数据分析合理到位。40‘
+    ** 数据分析: 具有有趣的发现，数据分析合理到位。40'
 
-    ** 图表元素: 标签、坐标轴、图例、图注标注正确。 40‘
+    ** 图表元素: 标签、坐标轴、图例、图注标注正确。 40'
 
-    ** 视觉设计: 色彩搭配和谐, 具有吸引力, 重点突出。40’
+    ** 视觉设计: 色彩搭配和谐, 具有吸引力, 重点突出。40'
 
-    ** 页面排版: 正确使用代码进行排版,页眉页脚设计完备，项目信息、数据来源、作者署名完备。20’
+    ** 页面排版: 正确使用代码进行排版,页眉页脚设计完备，项目信息、数据来源、作者署名完备。20'
 
-    ** UX设计: 读者可以被正确引导，知道哪里该滑动、哪里该点击。20‘
+    ** UX设计: 读者可以被正确引导，知道哪里该滑动、哪里该点击。20'
 
 
 
@@ -294,9 +294,7 @@ Have a look at Bootstrap, in very common usage in industry:
 
 **Homework**: 
 
-1. Multiple Lines (30pt):
-
-使用UNICEF数据，或者和你final project相关的数据，多组时间序列数据。
+1. Multiple Lines (30pt)：使用UNICEF数据，或者和你final project相关的数据，多组时间序列数据。
 
 * Lines 10'
 * 要有mouseover，引出线或点的变化，加上tooltip，10'
@@ -305,7 +303,7 @@ Have a look at Bootstrap, in very common usage in industry:
 * 加分项：用voronoi加mouseover 15'
 * gist subject: "Lesson4 Multiple Lines"
 
-2. Transition Plot With Buttons** (20pt) 
+2. Transition Plot With Buttons (20pt) 
 
 * 找一些有趣的line chart/scatter plot/Bars，做数据转换过渡。 （同类型图表中的数据转换）
 * 数据条数相等，没有丢失或多余数据
