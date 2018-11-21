@@ -110,14 +110,19 @@ var dataset =  d3.nest()
 * Reference and how-to's:
 
 ** Mike's block Multi-Line Voronoi https://bl.ocks.org/mbostock/8033015
+
 ** 教程: http://www.visualcinnamon.com/2015/07/voronoi.html (note:另一种tooltip: Bootstrap lib)
+
 ** Demo: Zan Armstrong's temperature lines: http://bl.ocks.org/zanarmstrong/38d7f79f61a03acc0ef0
 
 * voronoi 机场地图:
 
 ** US Airports: http://bl.ocks.org/mbostock/4360892
+
 ** Arc Aiport map: http://bl.ocks.org/mbostock/7608400, https://mbostock.github.io/d3/talk/20111116/airports.html
+
 ** World Airports: https://www.jasondavies.com/maps/voronoi/airports/
+
 ** World Capitals: https://www.jasondavies.com/maps/voronoi/capitals/
 
 
@@ -248,13 +253,21 @@ Have a look at Bootstrap, in very common usage in industry:
 * 评分标准 400’：
 
     ** 图表类型: 使用3个以上图表类型，图表类型的选择要适合数据和作者意图。 80‘
+
     ** 交互: 在需要的地方有过渡、高亮、文本提示框的效果，以及适当处使用排序、过滤、动画、数据更新等。80’
+
     ** 文字: 行文流畅无语病或错字，能够和数据图相互配合，起到解释数据图、明确数据图意图指向的作用。40‘
+
     ** 故事线: 有意义、有趣的故事线，形成有独到见解的故事。40’
+
     ** 数据分析: 具有有趣的发现，数据分析合理到位。40‘
+
     ** 图表元素: 标签、坐标轴、图例、图注标注正确。 40‘
+
     ** 视觉设计: 色彩搭配和谐, 具有吸引力, 重点突出。40’
+
     ** 页面排版: 正确使用代码进行排版,页眉页脚设计完备，项目信息、数据来源、作者署名完备。20’
+
     ** UX设计: 读者可以被正确引导，知道哪里该滑动、哪里该点击。20‘
 
 
