@@ -10,6 +10,8 @@ codeInTheRain~ https://rainymood.com/
 
 * Wenzhi's multiple lines http://bl.ocks.org/hlydxpwz/d7ce754ac761484a203c39e6c6d4e5cb 
 
+* XuPeng's bars transition http://bl.ocks.org/DJXP/raw/95ab7d9e92357743f4bacf6be1d90cc4/
+
 * semantic UI http://www.semantic-ui.cn/
 
 
@@ -98,11 +100,11 @@ bars
 
 ````
 
-* go over [2_bar_updates.html](2_bar_updates.html)
+* go through [2_bar_updates.html](2_bar_updates.html)
 
 ### 2. Dropdown Select Menu Use
 
-* go over [3_scatter_updates.html](2_bar_updates.html)
+* go through [3_scatter_updates.html](2_bar_updates.html)
 
 
 

@@ -48,7 +48,7 @@ var area = d3.area()
 
 * See [2_stacked_area.html](2_stacked_area.html)
 
-
+* Wide Data & Long Data 转换：http://jonathansoma.com/tutorials/d3/wide-vs-long-data/ 
 ...
 
 
