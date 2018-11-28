@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!-- A modified example from Scott Murray's Knight d3 course. -->
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Toys at Home: Update Data</title>
+		
+		<style type="text/css">
+
+			body {
+				background-color: white;
+				font-family: Helvetica, Arial, sans-serif;
+				padding: 50px;
+			}
+
+			h1 {
+				font-size: 24px;
+				margin: 0;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 10px 0 0 0;
+			}
+
+			.clicker {
+				font-weight: bolder;
+				color: red;
+				cursor: pointer;
+			}
+
+			svg {
+				background-color: white;
+			}
+
+			.dots {
+				fill: steelblue;
+				opacity: .7;
+			}
+
+			.dotlabels {
+				font-size: 10px;
+				color: black;
+			}
+
+			.highlighted {
+				fill: orange;
+			}
+
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+
+			.xlabel{
+				font-size: 15px;
+				fill: gray;
+			}
+			.ylabel{
+				font-size: 15px;
+				fill: gray;
+			}
+
+			#menu {
+				padding-left: 500px;
+				font-weight: bolder;
+			}
+
+		</style>
+	</head>
+	<body>
+
+		<h1>Toys at Home by Richest 20% and Poorest 20%</h1>
+
+		<p>Source: World Development Indicators, <a href="http://datacatalog.worldbank.org">World Bank SOWC All Countries Update 214</a>, latest data 2013</p>
+
+		<p id="menu">
+			<select>
+				<option value="all">All Countries</option>
+				<option value="rich">10 Richest</option>
+				<option value="poor">10 Poorest</option>
+			</select>
+		</p>
+
+	</body>
+
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+	<script type="text/javascript">
+
+
+		var fullwidth = 700;
+		var fullheight = 600;
+
+		var margin = { top: 20, right: 10, bottom: 50, left: 50 };
+
+		var width = fullwidth - margin.right - margin.left;
+		var height = fullheight - margin.top - margin.bottom;
+
+		var svg = d3.select("body")
+				.append("svg")
+				.attr("width", fullwidth)
+				.attr("height", fullheight)
+				.append("g")
+				.attr("transform", "translate(" + margin.left + "," + margin.right + ")");
+
+		var dotRadius = 3; 
+
+		var xScale = d3.scaleLinear()
+							.range([ 0, width])
+							// .domain([-1, 100]);
+
+		var yScale = d3.scaleLinear()
+							.range([ height, 0 ])
+							// .domain([-1, 100]);
+
+		var xAxis = d3.axisBottom(xScale)
+						.ticks(10); 
+
+		var yAxis = d3.axisLeft(yScale);
+
+
+		// utility for label placement jitter
+		/*function getRandomInt(min, max) {
+			return Math.floor(Math.random() * (max - min + 1) + min);
+		}*/
+
+
+		d3.csv("data/books_toys_by_rich_poor2013.csv", function(data) {
+
+			var menu = d3.select("#menu select")
+    			.on("change", filter);
+
+			// 初始下拉菜单
+  			menu.property("value", "all");
+
+  			svg.append("g")
+				.attr("class", "x axis")
+				.attr("transform", "translate(0," + height + ")")
+				.call(xAxis);
+
+			svg.append("g")
+				.attr("class", "y axis")
+				.call(yAxis);
+
+			svg.append("text")
+				.attr("class", "xlabel")
+				.attr("transform", "translate(" + (width / 2) + " ," +
+							(height + 25) + ")")
+				.style("text-anchor", "middle")
+				.attr("dy", 12)
+				.text("Poorest 20%");
+
+			svg.append("text")
+				.attr("class", "ylabel")
+				.attr("transform", "rotate(-90) translate(" + (-height/2)
+							 + ",0)")
+				.style("text-anchor", "middle")
+				.attr("dy", -30)
+				.text("Richest 20%");
+
+			//初始化
+			var curSelection = menu.property("value");
+  			render(data);  // do the full dataset render first.
+
+
+  			// Functions for handling updates and drawing with data
+			function filter() {
+				//get下拉菜单的当前value
+				curSelection = menu.property("value");
+
+				if (curSelection === "all") {
+				  	var newData = data; 
+				} else if (curSelection === "rich") { //poorest 10
+				  	var newData = data.sort(function(a,b) {
+					  	return b.poorToys - a.poorToys;
+				  	}).slice(0, 10);
+				} else if (curSelection === "poor") {  // descending
+					var newData = data.sort(function(a,b) { // richest 10
+						return b.richToys - a.richToys;
+					}).slice(0, 10);
+				}
+
+			    console.log(newData);
+				render(newData);
+			}
+
+
+			function render(data) {
+
+	  			xScale.domain(d3.extent(data,function(d){ return +d.poorToys; })).nice();
+				yScale.domain(d3.extent(data,function(d){ return +d.richToys; })).nice();
+
+				// data join
+				var circles = svg.selectAll("circle")
+					.data(data, function(d) {return d.country;}); // key function!
+
+				circles.enter()
+					.append("circle")
+					.merge(circles)
+					.transition()
+					.duration(2000)
+					.attr("cx", function(d) {
+						return xScale(+d.poorToys);
+					})
+					.attr("cy", function(d) {
+						return yScale(+d.richToys);
+					})
+					.attr("r", function() {
+						if (curSelection !== "all") {
+							return dotRadius * 2;
+						}
+						else {
+							return dotRadius;
+						}
+					})
+
+				circles
+					.exit()
+					.transition()
+					.duration(1000)
+					.style("opacity", 0)
+					.remove();
+
+				// Update the axes
+				svg.select(".x.axis")
+					.transition()
+					.duration(1000)
+					.call(xAxis);
+
+	            svg.select(".y.axis")
+	                .transition()
+	                .duration(1000)
+	                .call(yAxis);
+
+            	// label the dots if you're only showing 10.
+      			if (curSelection !== "all") {
+
+          			// data join with a key
+					var labels = svg.selectAll("text.dotlabels")
+						.data(data, function(d) {
+							return d.country;
+						});
+
+					// enter and create any new ones we need. Put minimal stuff here.
+					labels
+						.enter()
+						.append("text")
+						.attr("class", "dotlabels")
+						.style("opacity", 0)
+						.merge(labels)
+						.attr("transform", function(d) {
+						 	return "translate(" + xScale(+d.poorToys) + "," + yScale(+d.richToys) + ")";
+						})
+						.attr("dx", 5)
+						.attr("dy", function(d) {
+							// adding some space for the overlapping ones
+							if (d.country == "Costa Rica" || d.country == "Uzbekistan") {
+								return -12;
+							} else {
+								return -4;
+							}
+						})
+						.text(function(d) {return d.country})
+						.transition()
+						.duration(1000)
+						.delay(2000)
+						.style("opacity", 1)
+
+					// transition them.
+					// labels.transition()
+					// 	.duration(2000)
+					// 	.style("opacity", 1);
+
+					// remove ones that we don't have now
+					labels.exit()
+						.remove(); 
+
+				} else {
+					// if we're showing "all countries" - fade out any labels.
+					svg.selectAll("text.dotlabels")
+						.transition()
+						.duration(1000)
+						.style("opacity", 0)
+						.remove();
+				}
+
+			} // end of render
+
+		});
+
+
+	</script>
+</html>

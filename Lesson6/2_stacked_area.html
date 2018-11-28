@@ -1,0 +1,152 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Stacked Area</title>
+        <style>
+            body {
+              font: 12px sans-serif;
+              padding: 50px;
+            }
+
+            .axis path,
+            .axis line {
+              fill: none;
+              stroke: #000;
+              shape-rendering: crispEdges;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h2>Stacked Area Chart of South African Child Deaths from Measles</h2>
+
+        <p><a href="http://apps.who.int/gho/data/node.main.ghe100-by-cause?lang=en">WHO data</a>, deaths of children 0-4 years old in selected South African countries.</p>
+
+        <div id="chart"></div>
+
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+
+        
+
+        var fullwidth = 960,
+            fullheight = 500;
+
+        var margin = {top: 20, right: 30, bottom: 30, left: 60},
+            width = fullwidth - margin.left - margin.right,
+            height = fullheight - margin.top - margin.bottom;
+
+        var svg = d3.select("#chart").append("svg")
+                .attr("width", fullwidth )
+                .attr("height", fullheight)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        var xScale = d3.scaleTime()
+                .range([0, width]);
+
+        var yScale = d3.scaleLinear()
+                .range([height, 0]);
+
+        var colorScale = d3.scaleOrdinal(d3.schemeCategory20b); //
+        var xAxis = d3.axisBottom(xScale).ticks(10);
+        var yAxis = d3.axisLeft(yScale);
+
+        var formatDate = d3.timeFormat("Year %Y");
+        var parseDate = d3.timeParse("Year %Y");
+
+//  NEW HERE
+
+        //用于处理数据，把数据做成直接能画area的状态
+        var stack = d3.stack()
+
+        // 用stack的结果去画area
+        var area = d3.area()
+                .curve(d3.curveCardinal)
+                .x(function(d) {return xScale(parseDate(d.data.Year)); })
+                .y0(function(d) { return yScale(d[0]); })
+                .y1(function(d) { return yScale(d[1]); });
+
+        d3.csv("data/deaths_04yearsold_excerpt.csv", function(error, data) {
+
+            if (error) { console.log(error); };
+
+            //如果你的数据是wide data可能会方便很多
+            var dataset =  d3.nest()
+                .key(function(d) { return d.Year; }).sortKeys(d3.ascending)
+
+                //long data to wide data: http://jonathansoma.com/tutorials/d3/wide-vs-long-data/ 
+
+                .rollup(function(d) { // do this to each grouping
+                    // reduce takes a list and returns one value
+                    // in this case, the list is all the grouped elements
+                    // and the final value is an object with keys
+                    return d.reduce(function(prev, curr) {
+                      prev["Year"] = curr["Year"];
+                      prev[curr["Country"]] = curr["Measles"];
+                      return prev;
+                    }, {});
+                })
+                .entries(data)
+                .map(function(d) { // pull out only the values
+                        return d.value;
+                      });
+
+            console.log("dataset", dataset)
+
+            var country = ["Angola","Botswana","Burundi","Cameroon","Central African Republic","Congo","Ethiopia","Gabon","Kenya","Malawi","Mozambique","Namibia","Nigeria","Rwanda","Tanzania","Uganda","Zambia"]
+
+            stack.keys(country)
+                .order(d3.stackOrderNone)
+                // .order(d3.stackOrderInsideOut)
+                .offset(d3.stackOffsetNone)
+                // .offset(d3.stackOffsetWiggle);
+
+            //stack the data, 这里就是一会儿要用在area里的data了
+            var layers = stack(dataset);
+            console.log("layers", layers);  // it adds a y and y0 to the data values.
+
+            var maxDateVal = d3.max(dataset, function(d){
+                var vals = d3.keys(d).map(function(key){ return  key !== 'Year' ? d[key] : 0 ; });  // any new idea to calculate y domain?
+                return d3.sum(vals);
+            });
+
+            xScale.domain(d3.extent(data, function(d) { return parseDate(d.Year); }));
+            yScale.domain([0, maxDateVal]); // highest combo
+
+            svg.selectAll(".layer")
+                .data(layers) //上面stack出来的，记得吗？
+                .enter()
+                .append("path")
+                .attr("class", "layer")
+                .attr('d', area) // 用上面的area生成器来画
+                .style("fill", function(d) { return colorScale(d.key); }) // just count off
+                .append("title")
+                .text(function(d) {
+                    return d.key; // country is the key in the nest
+                });
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis);
+        });
+
+    </script>
+
+</html>
