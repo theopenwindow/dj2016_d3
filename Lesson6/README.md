@@ -19,7 +19,7 @@ var area = d3.area()
 * go over [1_area_plot.html](1_area_plot.html)
 
 
-### 2. Stacked Area
+## 2. Stacked Area
 
 We use the area layout and the stack function for this.
 
