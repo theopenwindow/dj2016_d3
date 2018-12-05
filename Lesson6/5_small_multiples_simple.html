@@ -1,0 +1,192 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Stacked Area</title>
+        <style>
+            body {
+              font: 10px sans-serif;
+              margin: 20px;
+              padding: 20px;
+            }
+
+            .line {
+              fill: none;
+              stroke: #666;
+              stroke-width: 1.5px;
+            }
+
+            .area {
+              fill: #e7e7e7;
+            }
+
+            .label {
+              fill: steelblue;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h2>Relative African Progress on Measles 2000-2013</h2>
+        <p>Source: WHO. Scales differ across each example, showing the change in each over time. This might be a little confusing, though - since the year labels look like scale values.</p>
+        <div id="chart"></div>
+
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+        
+
+        var fullwidth = 250,
+            fullheight = 80;
+
+        var margin = {top: 20, right: 10, bottom: 20, left: 10},
+            width = fullwidth - margin.left - margin.right,
+            height = fullheight - margin.top - margin.bottom;
+
+        var parseDate = d3.timeParse("Year %Y");
+        var formatDate = d3.timeFormat("%Y");
+
+        var xScale = d3.scaleTime()
+            .range([0, width]);
+
+        var yScale = d3.scaleLinear()
+            .range([height, 0]);
+
+        var area = d3.area()
+            .x(function(d) { return xScale(d.date); })
+            .y0(height)
+            .y1(function(d) { return yScale(d.Measles); });
+
+        var line = d3.line()
+            .x(function(d) { return xScale(d.date); })
+            .y(function(d) { return yScale(d.Measles); });
+
+
+
+        d3.csv("data/deaths_04yearsold_excerpt.csv", typeFix, function(error, data) { 
+
+            //typefix: load之前对数据进行初步处理
+
+            if (error) { console.log(error); };
+
+            // 1. prepare dataset with keys
+            var dataset = d3.nest()
+                .key(function(d) { return d.Country; })
+                .sortValues(function(a,b) {return a.date - b.date;})
+                .entries(data);
+
+            console.log("dataset", dataset)
+
+             // 2. 为各自domain做准备:y轴-计算出每一个国家的最大值
+            dataset.forEach(function(d) {
+                d.maxValue = d3.max(d.values, function(v) { return +v.Measles; });
+            });
+            console.log("maxValue", dataset)
+
+            // 因为values在前面已经按照date排序过，所以第一个和最后一个就是最小值、最大值
+            xScale.domain([
+                d3.min(dataset, function(d) { return d.values[0].date; }),
+                d3.max(dataset, function(d) { return d.values[d.values.length - 1].date; })
+            ]);
+
+            // 3. 直接把数据给svg，有多少data就建多少svg
+            var svg = d3.select("body").selectAll("svg")
+                .data(dataset)
+                .enter().append("svg")
+                .attr("width", fullwidth)
+                .attr("height", fullheight)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            // 4. 每个svg上画area
+            svg.append("path")
+                .attr("class", "area")
+                .attr("d", function(d) {
+                    yScale.domain([0, d.maxValue]); //如果你每一个图的y domain不一样，可以像这样放在"d"后面写
+                    return area(d.values);
+                });
+
+            // 每个svg上画line
+            svg.append("path")
+                .attr("class", "line")
+                .attr("d", function(d) {
+                    yScale.domain([0, d.maxValue]); 
+                    return line(d.values);
+                });
+
+            // 左上方加min日期
+            svg.append("text")
+                .attr("class", "label")
+                .attr("x", 0)
+                .attr("y", -8)
+                .style("text-anchor", "start")
+                .text(function(d) {
+                    return formatDate(d.values[0].date);
+                });
+
+            // 每一个图中间上放标国家名
+            svg.append("text")
+                .attr("class", "label")
+                .attr("x", width/2)
+                .attr("y", -8)
+                .style("text-anchor", "middle")
+                .text(function(d) {
+                    return d.key;
+                });
+
+            // 右上方加max日期
+            svg.append("text")
+                .attr("class", "label")
+                .attr("x", width)
+                .attr("y", -8)
+                .style("text-anchor", "end")
+                .text(function(d) {
+                    return formatDate(d.values[d.values.length - 1].date);
+                });
+
+            // put a dot on last point
+            svg.append("circle")
+                .attr("class", "label")
+                .attr("cx", function(d) {
+                    return xScale(d.values[d.values.length - 1].date);
+                })
+                .attr("cy", function(d) {
+                    yScale.domain([0, d.maxValue]);
+                    return yScale(d.values[d.values.length - 1].Measles);
+                })
+                .attr("r", 2);
+
+            // label the value on the last point
+            svg.append("text")
+                .attr("class", "label")
+                .attr("x", width)
+                .attr("y", function(d) {
+                    yScale.domain([0, d.maxValue]);
+                    return yScale(d.values[d.values.length - 1].Measles);
+                })
+                .attr("dy", -5)
+                .style("text-anchor", "end")
+                .text(function(d) {
+                    return d.values[d.values.length - 1].Measles;
+                });
+
+           
+        })
+
+        function typeFix(d) { 
+            d.Measles = +d.Measles;
+            d.date = parseDate(d.Year);
+            return d;
+        }
+    </script>
+
+</html>

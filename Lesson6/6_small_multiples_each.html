@@ -1,0 +1,208 @@
+<html lang="en">
+<!-- Modification of Mike Bostock's code in http://bl.ocks.org/mbostock/1157787 -->
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Stacked Area</title>
+        <style>
+            body {
+                font: 10px sans-serif;
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .line {
+                fill: none;
+                stroke: #666;
+                stroke-width: 1.5px;
+            }
+
+            .area {
+                fill: #e7e7e7;
+            }
+
+            .label {
+                fill: steelblue;
+            }
+
+            .endpoint {
+                fill: #666;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <h2>Relative African Progress on Measles 2000-2013</h2>
+        <p>Source: WHO. Scales differ across each example, showing the change in each over time. This might be a little confusing, though - since the year labels look like scale values.</p>
+        <div id="chart"></div>
+
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+        
+
+        var fullwidth = 250,
+            fullheight = 80;
+
+        var margin = {top: 20, right: 10, bottom: 20, left: 10},
+            width = fullwidth - margin.left - margin.right,
+            height = fullheight - margin.top - margin.bottom;
+
+        var parseDate = d3.timeParse("Year %Y");
+        var formatDate = d3.timeFormat("%Y");
+
+        var xScale = d3.scaleTime()
+            .range([0, width]);
+
+        var yScale = d3.scaleLinear()
+            .range([height, 0]);
+
+        var yAxis = d3.axisLeft(yScale)
+            .ticks(2)
+            .tickFormat(d3.format("s"));
+
+        var area = d3.area()
+            .x(function(d) { return xScale(d.date); })
+            .y0(height)
+            .y1(function(d) { return yScale(d[illness]); });
+
+        var line = d3.line()
+            .x(function(d) { return xScale(d.date); })
+            .y(function(d) { return yScale(d[illness]); });
+
+        // object["column"] = object.column; 
+        var illness = "Measles"; 
+
+
+        d3.csv("data/deaths_04yearsold_excerpt.csv", typeFix, function(error, data) { //typefix???
+
+            if (error) { console.log(error); };
+
+            // 1. prepare dataset and domains
+            var countries = d3.nest()
+                .key(function(d) { return d.Country; })
+                .sortValues(function(a,b) {return a.date - b.date;})
+                .entries(data);
+
+            console.log("countries", countries)
+
+            // 以最近日期（2013年）对应的数据做排序
+            countries.sort(function(a,b) { return b.values[13][illness] - a.values[13][illness]; });  
+
+            xScale.domain([
+                d3.min(countries, function(d) { return d.values[0].date; }),
+                d3.max(countries, function(d) { return d.values[d.values.length - 1].date; })
+            ]);
+
+            // 2. 加data个svg，用d3.each让每一个都执行function multiple
+            var svg = d3.select("body").selectAll("svg")
+                .data(countries) 
+                .enter().append("svg")
+                .attr("width", fullwidth)
+                .attr("height", fullheight)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                .each(multiple); // uses each to call the multiple code for each country
+
+            // 3. function multiple()
+            function multiple(country){
+                // console.log("in multiple", country);
+
+                // 3.1 选择this
+                var localsvg = d3.select(this); //这里的this就是执行了multiple的每一个g啦
+
+                // 3.2 各自的y-domain
+                yScale.domain([0, d3.max(country.values, function(d) { return d[illness]; })]);
+
+                // 3.3 开始画……area, line, text ……
+                localsvg.append("path")
+                    .attr("class", "area")
+                    .attr("d", function(d) {
+                        return area(d.values);
+                    });
+
+                // line
+                localsvg.append("path")
+                    .attr("class", "line")
+                    .attr("d", function(d) {
+                        return line(d.values);
+                    });
+
+                // first date
+                localsvg.append("text")
+                    .attr("class", "label")
+                    .attr("x", 0)
+                    .attr("y", height + margin.bottom/2)
+                    .style("text-anchor", "start")
+                    .text(function(d) {
+                        return formatDate(d.values[0].date);
+                    });
+
+                // country name
+                localsvg.append("text")
+                    .attr("class", "label")
+                    .attr("x", width/2)
+                    .attr("y", -8)
+                    .style("text-anchor", "middle")
+                    .text(function(d) {
+                        return d.key;
+                    });
+
+                // last date
+                localsvg.append("text")
+                    .attr("class", "label")
+                    .attr("x", width)
+                    .attr("y", height + margin.bottom/2)
+                    .style("text-anchor", "end")
+                    .text(function(d) {
+                        return formatDate(d.values[d.values.length - 1].date);
+                    });
+
+                // last point
+                localsvg.append("circle")
+                    .attr("class", "endpoint")
+                    .attr("cx", function(d) {
+                        return xScale(d.values[d.values.length - 1].date);
+                    })
+                    .attr("cy", function(d) {
+                        return yScale(d.values[d.values.length - 1][illness]);
+                    })
+                    .attr("r", 2);
+
+                // last value
+                localsvg.append("text")
+                    .attr("class", "endpoint")
+                    .attr("x", width)
+                    .attr("y", function(d) {
+                        return yScale(d.values[d.values.length - 1][illness]);
+                    })
+                    .attr("dy", -5)
+                    .style("text-anchor", "end")
+                    .text(function(d) {
+                        return d.values[d.values.length - 1][illness];
+                    });
+
+            }
+            
+
+        })
+
+        function typeFix(d) {
+            d.Malaria = +d.Malaria;
+            d.Measles = +d.Measles;
+            d.Sepsis = +d.Sepsis;
+            d.date = parseDate(d.Year);
+            return d;
+        }
+    </script>
+
+</html>

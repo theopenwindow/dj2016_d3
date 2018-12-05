@@ -1,0 +1,372 @@
+<html lang="en">
+<!-- Modification of Mike Bostock's code in http://bl.ocks.org/mbostock/1157787 -->
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Stacked Area</title>
+        <style>
+            body {
+                font: 10px sans-serif;
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .chart {
+              float: left;
+              padding-right: 5px;
+              padding-bottom: 5px;
+              padding-top:0;
+              padding-left:0;
+            }
+
+            .background {
+              fill: none;
+            }
+            .area {
+              fill: #99CCFF;
+            }
+
+            .line {
+              fill: none;
+              stroke: #334C80;
+              stroke-width: 1.4px;
+            }
+
+            .title {
+              font-size: 12px;
+            }
+
+            .axis line, .grid line {
+              stroke-width: .5px;
+              shape-rendering: crispEdges;
+              stroke: #fff;
+              opacity: 0.5;
+              pointer-events: none;
+            }
+
+            .axis path {
+              display: none;
+            }
+
+            .hidden {
+              display:none;
+              opacity: 0.0;
+            }
+
+            .label {
+                fill: steelblue;
+            }
+
+            .endpoint {
+                fill: #666;
+            }
+        </style>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <h1>Deaths Due to HIV/AIDS for African Children Under 4 Years Old</h1>
+            <div id="lead">
+                <p>Data Source: WHO, selected African countries. Based on <a href="https://flowingdata.com/2014/10/15/linked-small-multiples/">tutorial code by Jim Vallandingham.</a></p>
+            </div>
+            <div id="main">
+                <div id="button-wrap">
+                    <div id="count" class="button active">COUNT</div>
+                    <div id="country" class="button">COUNTRY</div>
+                </div>
+                <div id="vis"></div>
+            </div>
+        </div> <!--! end of #container -->
+
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.1.0/d3.js"></script>
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- for sort -->
+    <script src="dist/isotope.pkgd.min.js"></script>
+
+
+    <script type="text/javascript">
+        // Heavily simplified version of Jim Vallandingham's Coffee Script tutorial atThe National
+        // https://flowingdata.com/2014/10/15/linked-small-multiples/
+
+
+        var fullwidth = 150,
+            fullheight = 120;
+
+        var margin = {top: 20, right: 10, bottom: 20, left: 40},
+            width = fullwidth - margin.left - margin.right,
+            height = fullheight - margin.top - margin.bottom;
+
+        var parseDate = d3.timeParse("Year %Y");
+        var formatDate = d3.timeFormat("%Y");
+
+        var xScale = d3.scaleTime()
+            .range([0, width])
+
+        var yScale = d3.scaleLinear()
+            .range([height, 0])
+
+        var yAxis = d3.axisLeft(yScale)
+            .ticks(4)
+            .tickFormat(d3.format(".0s"));
+
+        // helper functions for looking up things on mouseover
+        var xValue = function(d) {
+            return d.date;
+        };
+        var yValue = function(d) {
+            return d.count;
+        };
+
+        var area = d3.area()
+            .x(function(d) { return xScale(xValue(d)); })
+            .y0(height)
+            .y1(function(d) { return yScale(yValue(d)); });
+
+        var line = d3.line()
+            .x(function(d) { return xScale(xValue(d)); })
+            .y(function(d) { return yScale(yValue(d)); });
+
+        var illness = "HIV_Aids";
+
+        var data = [],
+            circle = null,
+            caption = null,
+            curYear = null; 
+
+        var bisect = d3.bisector(function(d) { //获取d.date这个数组项左边的位置
+            return d.date;
+        }).left;
+
+        // bisect API https://github.com/d3/d3-array#bisectLeft
+        // 中文各种d3语法简述 https://blog.csdn.net/kriszhang/article/details/70174410
+
+        // Prep 1: scale data with functions
+        function setupScales(data){
+            var extentX, maxY;
+
+            extentX = d3.extent(data[0].values, function(d){
+                return xValue(d);
+            })
+            xScale.domain(extentX);
+
+            maxY = d3.max(data, function(d){ 
+                return d3.max(d.values, function(v){
+                    return yValue(v);
+                })
+            });
+            yScale.domain([0, maxY + maxY * .25]);
+            // console.log(maxY)
+        }
+
+        // Prep 2: prepare data with functions
+        function transformData(rawData) {
+            rawData.forEach(function(r){
+                r.date = parseDate(r.Year);
+                r.count = + r[illness];
+            });
+
+            var nest = d3.nest()
+                .key(function(r){ return r.Country; })
+                .sortValues(function(a,b){ return a.date - b.date; })
+                .entries(rawData);
+
+            nest = nest.filter(function(n){
+                return n.values.length == 14;
+            })   
+
+            return nest; 
+        }
+
+        // Prep 3: jquery lib to do the small multiple sorting
+        function setupIsotope() {
+            $("#vis").isotope({
+                itemSelector: '.chart',
+                layoutMode: 'fitRows',
+                getSortData: {
+                    count: function(e) {
+                        var d, sum;
+                        d = d3.select(e).datum();
+                        sum = d3.sum(d.values, function(d) {
+                            return d.count;
+                        });
+                        return sum * -1;
+                    },
+                    country: function(e) {
+                        var d;
+                        d = d3.select(e).datum();
+                        return d.key;
+                    }
+                }
+            });
+            return $("#vis").isotope({
+                sortBy: 'count'
+            });
+        }
+
+
+        d3.csv("data/deaths_04yearsold_excerpt.csv", function(error, data) { 
+
+            if (error) { console.log(error); };
+
+            var countries = transformData(data);
+
+            d3.select("#vis").datum(countries).each(function(myData){
+
+
+                setupScales(myData);
+
+                var div = d3.select(this).selectAll(".chart").data(myData);
+
+                // 把数据给div,每个div+svg+g
+                var svg = div.enter()
+                    .append("div")
+                    .attr("class","chart")
+                    .append("svg")
+                    .attr("width", fullwidth)
+                    .attr("height", fullheight)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+
+                // 每个g上+rect作为热区
+                svg.append("rect")
+                    .attr("class", "background")
+                    .attr("width", width + margin.right) // extra space for labels that appear
+                    .attr("height", height)
+                    .style("pointer-events", "all")
+                    .on("mouseover", mouseover)
+                    .on("mousemove", mousemove)
+                    .on("mouseout", mouseout);
+
+                // 每个g上+g.lines：用来画图
+                var lines = svg.append("g").attr("class", "lines");
+
+                lines.append("path")
+                    .attr("class", "area")
+                    .style("pointer-events", "none")
+                    .attr("d", function(c) {
+                        return area(c.values);
+                    });
+
+                lines.append("path")
+                    .attr("class", "line")
+                    .style("pointer-events", "none")
+                    .attr("d", function(c) {
+                        return line(c.values);
+                    });
+
+                lines.append("text")
+                    .attr("class", "static_year")
+                    .attr("x", 0)
+                    .attr("y", height + margin.bottom/2)
+                    .style("text-anchor", "start")
+                    .text(function(c) {
+                        return formatDate(c.values[0].date);
+                    });
+
+                lines.append("text")
+                    .attr("class", "title")
+                    .attr("x", width/2)
+                    .attr("y", -8)
+                    .style("text-anchor", "middle")
+                    .text(function(d) {
+                        return d.key;
+                    });
+
+                lines.append("text")
+                    .attr("class", "static_year")
+                    .attr("x", width)
+                    .attr("y", height + margin.bottom/2)
+                    .style("text-anchor", "end")
+                    .text(function(d) {
+                        return formatDate(d.values[d.values.length - 1].date);
+                    });
+
+                // mouseover会出现的circle
+                var circle = lines.append("circle")
+                    .attr("class", "circle")
+                    .attr("opacity", 0)
+                    .attr("r", 2)
+                    .style("pointer-events", "none");
+
+                // mouseover会出现的value
+                var caption = lines.append("text")
+                    .attr("class", "caption")
+                    .attr("text-anchor", "middle")
+                    .style("pointer-events", "none")
+                    .attr("dy", -8);
+
+                // mouseover会出现的year
+                var curYear = lines.append("text")
+                    .attr("class", "curYear")
+                    .attr("text-anchor", "middle")
+                    .style("pointer-events", "none")
+                    .attr("dy", 13)
+                    .attr("y", height);
+
+
+                lines.append("g").attr("class","y axis").call(yAxis);
+
+                function mouseover(){
+                    circle.attr("opacity", 1);
+                    d3.selectAll(".static_year").classed("hidden", true);
+                    // return mousemove.call(this);
+                }
+
+                function mousemove(){
+                    var year = xScale.invert(d3.mouse(this)[0]).getFullYear();
+                    var date = d3.timeParse("%Y")(year);
+
+                    var index = 0;
+                    circle
+                        .attr("cx", xScale(date)) // locate the x using year date
+                        .attr("cy", function(c) {
+                            // find the closest value with bisect and the values for the circles y's
+                            //console.log(c.values);
+                            index = bisect(c.values, date, 0, c.values.length - 1); // which number is it?
+                            return yScale(yValue(c.values[index])); // yValue just gets the count
+                        });
+
+                    caption.attr("x", xScale(date))
+                        .attr("y", function(c) {
+                            return yScale(yValue(c.values[index]));
+                        })
+                        .text(function(c) {
+                            return yValue(c.values[index]);
+                        });
+                    return curYear.attr("x", xScale(date)).text(year);
+                }
+
+                function mouseout(){
+                    d3.selectAll(".static_year").classed("hidden", false);
+                    circle.attr("opacity", 0);
+                    caption.text("");
+                    return curYear.text("");
+                }
+
+            })// each
+
+            
+
+            setupIsotope();
+
+            d3.select("#button-wrap").selectAll("div").on("click", function() {
+                var id;
+                id = d3.select(this).attr("id");
+                d3.select("#button-wrap").selectAll("div").classed("active", false);
+                d3.select("#" + id).classed("active", true);
+                return $("#vis").isotope({
+                  sortBy: id
+                });
+            }); // end button setup
+        })
+        
+    </script>
+
+</html>

@@ -103,8 +103,10 @@
                         return d.value;
                       });
 
-            console.log("dataset", dataset)
+            // 1. wide data prepared
+            console.log("wide dataset", dataset)
 
+            // 2. stack function 
             var country = ["Angola","Botswana","Burundi","Cameroon","Central African Republic","Congo","Ethiopia","Gabon","Kenya","Malawi","Mozambique","Namibia","Nigeria","Rwanda","Tanzania","Uganda","Zambia"]
 
             stack.keys(country)
@@ -113,18 +115,32 @@
                 .offset(d3.stackOffsetNone)
                 // .offset(d3.stackOffsetWiggle);
 
-            //stack the data, 这里就是一会儿要用在area里的data了
+            // 3. stack the data
             var layers = stack(dataset);
-            console.log("layers", layers);  // it adds a y and y0 to the data values.
+            console.log("layers", layers);  // it adds a y0 and y1 to the data values.
 
-            var maxDateVal = d3.max(dataset, function(d){
+            /* 这个得出max的方式太666了我理解不了不要问我是怎么回事理解不了理解不了……你理解了可以讲给我听】
+
+            var maxY = d3.max(dataset, function(d){
                 var vals = d3.keys(d).map(function(key){ return  key !== 'Year' ? d[key] : 0 ; });  // any new idea to calculate y domain?
                 return d3.sum(vals);
-            });
+            });*/
+
+            // 4. get the domains
+            // var maxY = d3.max(layers[layers.length - 1], function(d){ return d[1]; })
+
+            var maxY = d3.max(
+                layers,  function(l){
+                    return d3.max(l, function(d) { return d[1]; })
+                }
+            )
+            console.log(maxY) // highest y1
 
             xScale.domain(d3.extent(data, function(d) { return parseDate(d.Year); }));
-            yScale.domain([0, maxDateVal]); // highest combo
+            yScale.domain([0, maxY]); 
 
+
+            // 5. draw stacked layers
             svg.selectAll(".layer")
                 .data(layers) //上面stack出来的，记得吗？
                 .enter()
