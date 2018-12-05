@@ -336,6 +336,13 @@ Fancier - Animations!
 * Another Intro https://www.infragistics.com/community/blogs/b/tim_brock/posts/an-introduction-to-small-multiples
 
 
+### Recently Interesting:
+
+* The Pudding Cup: The best visual and data-driven stories of 2018 https://pudding.cool/process/pudding-awards-2018/
+
+* Information Is Beautiful 2018 Shortlist https://www.informationisbeautifulawards.com/news/323-information-is-beautiful-awards-2018-the-winners
+
+
 
 ## Homework
 
@@ -346,6 +353,7 @@ DDL Dec 11 5pm
 
 * https://flowingdata.com/2014/10/15/linked-small-multiples/
 * Mike's tutorial: http://bost.ocks.org/mike/map/
+
 
 **Homework 1 (25pt)**: Stacked Areas /Streamgraphs 
 
