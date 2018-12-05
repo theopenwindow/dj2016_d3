@@ -147,7 +147,7 @@ series
 * go through [3_stacked_bar.html](3_stacked_bar.html)
 
 
-## 4. Stacked Bar Percent (Normalized)
+## 5. Stacked Bar Percent (Normalized)
 
 * stack.offset(d3.stackOffsetExpand);
 
@@ -215,13 +215,13 @@ Fancier - Animations!
 * Stacked to multiples transition: http://bl.ocks.org/mbostock/4679202
 
 
-## 5. Small Multiples
+## 6. Small Multiples
 
 ### Really Good Tutorial from Vallanding Ham: http://vallandingham.me/small_mults_talk/
 
 * a Senior Data Visualization and Data Science Engineer.http://vallandingham.me
 
-### 方法1： "手画"
+### 6.1： "手画"
 
 ```
 // 1. prepare dataset with keys
@@ -251,7 +251,7 @@ Fancier - Animations!
 
 * Go through [5_small_multiples_simple.html](5_small_multiples_simple.html)
 
-### 方法2：d3.each()
+### 6.2：d3.each()
 
 * .each：使得它附着的selection全都会call这个function； 区分于.call：只在本selection上去叫里面的function。
 
@@ -296,7 +296,7 @@ Fancier - Animations!
 
 * Go through [6_small_multiples_each.html](6_small_multiples_each.html)
 
-### linked small multiples
+### 6.3 linked small multiples
 ```
 具体怎么画都是可以查出来的，逻辑清楚最要紧
 
