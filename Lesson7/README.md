@@ -59,9 +59,13 @@
 
 * Natural Earth http://www.naturalearthdata.com/downloads/ 很多，但中国数据要小心
 
-* LA http://boundaries.latimes.com/sets/ and 
+* 一些可以注意收藏的城市database，比如LA http://boundaries.latimes.com/sets/  ，北京城市实验室 https://www.beijingcitylab.com/
 
 * geocommons http://geocommons.com/ I don't believe anything useful for you, but in case... You can hang around here...
+
+* 2017高校数据新闻比赛数据库 http://file.caixin.com/datanews_mobile/competition2017/
+
+* 麻辣GIS https://malagis.com/category/gis-resource/
 
 * Here, China, Official: 
 

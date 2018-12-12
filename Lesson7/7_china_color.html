@@ -68,12 +68,12 @@
 			.projection(projection);
 
 		var colorScale = d3.scaleOrdinal(d3.schemeCategory20b);
-		var colorScale2 = d3.scaleLinear().range(["#fee0d2", "#de2d26"]);
+		var colorScale2 = d3.scaleLinear().range(["#fff2c8", "#d5a26c"]);
 
 		// we use queue because we have 2 data files to load.
 		queue()
 		    .defer(d3.json, "data/china_diaoyudao.json")
-		    .defer(d3.csv, "data/china_district_gdp.csv", typeAndSet)
+		    .defer(d3.csv, "data/try.csv", typeAndSet)
 		    .await(loaded);
 
 		var districtByName = d3.map();
