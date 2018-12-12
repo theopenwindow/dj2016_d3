@@ -1,4 +1,4 @@
-# Lesson6: Making Maps
+# Lesson7: Making Maps
 
 ### Homework Update Plot Review
 
