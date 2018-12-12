@@ -1,0 +1,54 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Geojson and Topojson</title>
+        <style>
+
+        </style>
+    </head>
+
+    <body>
+
+        <h1>Geojson and Topojson</h1>
+
+		<p>Nothing here. Open the console.</p>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+
+		// we use queue because we have 2 data files to load.
+		queue()
+		    .defer(d3.json, "data/china_diaoyudao.json")
+		    .defer(d3.json, "data/china_diaoyudao_topo.json")
+		    .await(loaded);
+
+		function loaded(error, geo, topo){
+			if(error) throw error;
+
+			console.log("geo",geo)
+			console.log("topo",topo)
+
+			/*var geo_data = geo.features;
+			var topo_data = topojson.feature(topo, topo.objects.china_diaoyudao).features;
+			
+			console.log("geo_data", geo_data)
+			console.log("topo_data", topo_data)*/
+		}
+
+    </script>
+
+</html>

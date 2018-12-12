@@ -1,0 +1,140 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>China Map</title>
+        <style>
+			body {
+				background-color: white;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			h1 {
+				font-size: 24px;
+				margin: 0;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 10px 0 0 0;
+			}
+
+			path {
+				stroke: #555555;
+				stroke-width: .5px;
+
+			}
+
+			.legendLinear text {
+			    font-size: 9px;
+			}
+        </style>
+    </head>
+
+    <body>
+
+        <h1>中国大陆2017年地区GDP（亿元）</h1>
+
+		<div id="china"></div>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+
+		var width = 800;
+		var height = 400;
+
+		var svg = d3.select("#china")
+					.append("svg") 
+					.attr("width", width)
+					.attr("height", height);
+
+		var china_g = svg.append("g");
+
+		var projection = d3.geoMercator()
+
+		var geoGenerator = d3.geoPath()
+			.projection(projection);
+
+		var colorScale = d3.scaleOrdinal(d3.schemeCategory20b);
+		var colorScale2 = d3.scaleLinear().range(["#fee0d2", "#de2d26"]);
+
+		// we use queue because we have 2 data files to load.
+		queue()
+		    .defer(d3.json, "data/china_diaoyudao.json")
+		    .defer(d3.csv, "data/china_district_gdp.csv", typeAndSet)
+		    .await(loaded);
+
+		var districtByName = d3.map();
+
+		function typeAndSet(d){
+			d.Year2017 = +d.Year2017;
+			districtByName.set(d.district, d)
+			return d;
+		}
+
+		function getColor(d){
+			var district = districtByName.get(d.properties.name);
+			// console.log(district)
+
+			if(district){
+				console.log(colorScale2(district.Year2017))
+				return colorScale2(district.Year2017);
+			}else{
+				return "#ccc";
+			}
+		}
+
+		function loaded(error, china, gdp){
+			if(error) throw error;
+
+			console.log(gdp);
+
+			colorScale2.domain(d3.extent(gdp, function(g){
+				return g.Year2017;
+			}))
+
+			projection.fitSize([800, 400], china);
+
+			var china = china_g.selectAll("path")
+				.data(china.features);
+
+			china.enter()
+				.append("path")
+				.attr("d", geoGenerator)
+				// .attr("fill", function(d,i){ return colorScale(i); })
+				.attr("fill", function(d){ return getColor(d); })
+
+			// The d3-legend component is called here:
+
+			var linear = colorScale2;
+
+			svg.append("g")
+				.attr("class", "legendLinear")
+				.attr("transform", "translate(20,20)");
+
+			var legendLinear = d3.legendColor()
+				.shapeWidth(30)
+				.orient("vertical")
+				.labelFormat(d3.format(".0f"))
+				.scale(linear);
+
+			svg.select(".legendLinear")
+				.call(legendLinear);
+
+		}
+
+    </script>
+
+</html>

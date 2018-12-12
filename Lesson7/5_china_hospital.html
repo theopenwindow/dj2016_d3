@@ -1,0 +1,150 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>China Map</title>
+        <style>
+			body {
+				background-color: white;
+				font-family: Helvetica, Arial, sans-serif;
+			}
+
+			h1 {
+				font-size: 24px;
+				margin: 0;
+			}
+
+			p {
+				font-size: 14px;
+				margin: 10px 0 0 0;
+			}
+
+			path {
+				stroke: #555555;
+				stroke-width: .5px;
+
+			}
+
+			.legendLinear text {
+			    font-size: 9px;
+			}
+        </style>
+    </head>
+
+    <body>
+
+        <h1>中国医院等级分布</h1>
+
+		<div id="china"></div>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+
+		var width = 800;
+		var height = 400;
+
+		var svg = d3.select("#china")
+					.append("svg") 
+					.attr("width", width)
+					.attr("height", height);
+
+		var g_china = svg.append("g").attr("class","china"),
+			g_hospital = svg.append("g").attr("class","hospital");
+
+		var r = 1;
+
+		var projection = d3.geoMercator()
+
+		var geoGenerator = d3.geoPath()
+			.projection(projection);
+
+		// var colorScale = d3.scaleOrdinal(d3.schemeCategory20b);
+		var colorScale = d3.scaleOrdinal(d3.schemeCategory20b)
+			.domain(["一级","一甲","二级","二甲","三级","三甲",""])
+			
+		var colorScale2 = d3.scaleLinear().range(["#fee0d2", "#de2d26"]);
+
+		// we use queue because we have 2 data files to load.
+		queue()
+		    .defer(d3.json, "data/china_diaoyudao.json")
+		    .defer(d3.csv, "data/hospital.csv", typeAndSet)
+		    .await(loaded);
+
+		function typeAndSet(d){
+			d.longitude = +d.longitude;
+			d.latitude = + d.latitude;
+			// districtByName.set(d.district, d)
+			return d;
+		}
+
+		function loaded(error, china, hospital){
+			if(error) throw error;
+
+			console.log(hospital);
+
+			// colorScale2.domain(d3.extent(gdp, function(g){
+			// 	return g.Year2017;
+			// }))
+
+			projection.fitSize([800, 400], china);
+
+			// china map
+			var map = g_china.selectAll("path")
+				.data(china.features);
+
+			map.enter()
+				.append("path")
+				.attr("d", geoGenerator)
+				.attr("fill", "#cecece")
+
+			var circles = g_hospital.selectAll("circle")
+				.data(hospital);
+
+			circles.enter()
+				.append("circle")
+				.attr("cx", function(d){ return projection([d.longitude, d.latitude])[0]} )
+				.attr("cy", function(d){ return projection([d.longitude, d.latitude])[1]})
+				.attr("r", r)
+				.attr("fill", function(d){ return colorScale(d.level)})
+				.attr("fill", function(d){ if(d.level){
+					 	return colorScale(d.level)
+					}else{
+						return "#fff";
+					}
+				})
+
+
+			// The d3-legend component is called here:
+
+			var ordinal = colorScale;
+
+			svg.append("g")
+				.attr("class", "legendOrdinal")
+				.attr("transform", "translate(0,20)");
+
+			var legendOrdinal = d3.legendColor()
+				.shapeWidth(30)
+				.orient("horizontal")
+				.labels(["一级","一甲","二级","二甲","三级","三甲","无"])
+				.scale(ordinal);
+
+			svg.select(".legendOrdinal")
+				.call(legendOrdinal);
+
+		}
+
+    </script>
+
+</html>
