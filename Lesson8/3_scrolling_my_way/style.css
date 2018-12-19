@@ -1,0 +1,38 @@
+.front, .back {
+	position: absolute;
+	top: 0;
+}
+.back {
+	position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: lightsteelblue; 
+    z-index: -1;
+}
+
+.front_part {
+	width: 100vw;
+	height: 150vh;
+}
+
+.front_container {
+    width: 100vw;
+    margin: 50vh auto;
+    padding: 10px;
+    border: #555 1px solid;
+}
+
+@media screen and (min-width: 800px){
+    .front_container {
+        width: 350px;
+        margin-top: 50vh;
+        margin-left: 800px;
+    }
+}
+
+@media screen and (min-width: 1500px){
+    .front_container {
+        width: 600px;
+        margin-left: 1200px;
+    }
+}

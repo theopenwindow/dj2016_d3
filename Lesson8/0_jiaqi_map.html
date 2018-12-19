@@ -1,0 +1,242 @@
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name=viewport content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+        <title>Population Density</title>
+        <style>
+            body {
+                padding: 0;
+				margin: 0 auto;
+				width: 1000;
+				background-color: white;
+            }
+
+            h2 {
+                font-size: 28px;
+				text-align: center;
+				margin-top: 20px;
+            }
+
+            p {
+                font-size: 18px;
+                margin: 10px 0 0 0;
+            }
+
+            svg {
+				background-color: white;
+			}
+			#intro{
+				font-size: 18px;
+				text-indent: 36px;
+				text-align: center;
+				margin-bottom: 20px;
+			}
+			.source{
+				color: rgba(122,122,122,1.00);
+				font-size: 15px;
+			}
+			.credit{
+				color: rgba(122,122,122,1.00);
+				margin-bottom: 10px;
+				font-size: 15px;
+			}
+            .axis path,
+            .axis line {
+              fill: none;
+              stroke: #000;
+              shape-rendering: crispEdges;
+            }
+			.tooltip {
+                position: absolute;
+                z-index: 10;
+				background-color: white;
+				color: black;
+				text-indent: 2px;
+			    padding: 1px;
+				margin: 2px;
+				border: rgb(255,97,97) 1px solid;
+            }
+			path {
+				stroke: #fff;
+				stroke-width: .5px;
+
+			}
+
+			.legendLinear text {
+			    font-size: 9px;
+			}
+
+        </style>
+    </head>
+
+    <body>
+
+        <h2>国家人口密度</h2>
+   		<p id="intro">本图展现了2018年世界各国人口密度总体情况，部分国家数据缺失。</p> 
+       <div id="container">
+        <p class="source">数据来源：联合国数据库</p>
+        <p class="credit">16数新 李嘉琪 201601133001</p>
+       </div> 
+		<div id="density"></div>
+
+    </body>
+
+    <!-- d3线上lib -->
+    <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+
+    <!-- jquery线上lib -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+    <script type="text/javascript">
+
+		var width = 1000;
+		var height = 800;
+
+		var svg = d3.select("#density")
+					.append("svg") 
+					.attr("width", width)
+					.attr("height", height);
+		
+		var tooltip = d3.select("body")
+                        .append("div")
+                        .attr("class", "tooltip");
+
+		var density_g = svg.append("g");
+
+		var projection = d3.geoMercator()
+
+		var geoGenerator = d3.geoPath()
+			.projection(projection);
+
+		var colorScale = d3.scaleOrdinal(d3.schemeCategory20b);
+		var colorScale2 = d3.scaleQuantile().range(["#b6e0ff", "#99bfff", "#759cff", "#c4b2ff", "#edb2ff", "#ffdae9"]);
+
+		// we use queue because we have 2 data files to load.
+		queue()
+		    .defer(d3.json, "data/countries.geo.json")
+		    .defer(d3.csv, "data/population_density.csv", typeAndSet)
+		    .await(loaded);
+
+		var countryByName = d3.map();
+
+		function typeAndSet(d){
+			d.year2018 = +d.year2018;
+			countryByName.set(d.Country_name, d)
+			return d;
+		}
+
+		function getColor(d){
+			var country = countryByName.get(d.properties.name);
+			// console.log(country)
+
+			if(country){
+//				console.log(colorScale2(country.year2018))
+				return colorScale2(country.year2018);
+			}else if(d.properties.name!="Antarctica"){
+				return "#ccc";
+			}else{
+				return "#fff";
+			}
+		}
+
+		function getCol(matrix, col){
+		   var column = [];
+		   for(var i=0; i<matrix.length; i++){
+		      column.push(matrix[i][col]);
+		   }
+		   return column;
+		}
+
+		function loaded(error, density, gdp){
+			if(error) throw error;
+			
+			console.log(gdp);
+
+			// colorScale2.domain(d3.extent(gdp, function(g){
+			// 	return g.year2018;
+			// }))
+			colorScale2.domain(getCol(gdp, 'year2018'))
+			console.log(getCol(gdp, 'year2018'))
+			// colorScale2.domain([0, 10, 100, 1000, 20000])
+
+			projection.fitSize([1000, 800], density);
+
+			var density = density_g.selectAll("path")
+				.data(density.features);
+
+			density.enter()
+				.append("path")
+				.attr("d", geoGenerator)
+				// .attr("fill", function(d,i){ return colorScale(i); })
+				.attr("fill", function(d){ return getColor(d); })
+			    .on("mouseover", mouseoverFunc) 
+                .on("mousemove", mousemoveFunc) 
+                .on("mouseout", mouseoutFunc); 
+
+			// The d3-legend component is called here:
+
+			var linear = colorScale2;
+
+			svg.append("g")
+				.attr("class", "legendLinear")
+				.attr("transform", "translate(20,20)");
+
+			var legendLinear = d3.legendColor()
+				.shapeWidth(30)
+				.orient("vertical")
+				.labelFormat(d3.format(".0f"))
+				.scale(linear);
+
+			svg.select(".legendLinear")
+				.call(legendLinear);
+
+		}
+		function mouseoverFunc(d) {
+			
+			if (d.properties.name!="Antarctica"){
+				d3.select(this)
+				.transition()
+				.duration(100)
+				.style("stroke-width", 1.5)
+			    .style("stroke", "white"); 
+				
+				if (countryByName.get(d.properties.name)){
+				tooltip
+                .style("display", null) 
+                .text( d.properties.name + "的人口密度是" + countryByName.get(d.properties.name)["year2018"]);
+				}else{
+				tooltip
+				.style("display", null)
+				.text( d.properties.name + "数据缺失");
+				}
+			}
+           
+				
+        }
+
+        	function mousemoveFunc(d) {
+            tooltip
+                .style("top", (d3.event.pageY + 10) + "px" )
+                .style("left", (d3.event.pageX + 15) + "px");
+        }
+
+			function mouseoutFunc(d) {
+				if (d.properties.name!="Antarctica"){
+				d3.select(this)
+				.transition()
+				.duration(100)
+				.style("stroke-width", 1)
+			    .style("stroke", "white"); 
+            tooltip.style("display", "none");
+			d3.select(this) }
+
+        }
+
+    </script>
+
+</html>

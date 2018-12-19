@@ -1,0 +1,27 @@
+.axis path,
+.axis line {
+  fill: none;
+  stroke: none;
+  shape-rendering: crispEdges;
+}
+
+path.line {
+  fill: none;
+  stroke-width: 1px;
+}
+
+.line.normal {
+  stroke: gray;
+  stroke-opacity: .3;
+}
+
+.line.focused {
+  stroke-width: 2px;
+  stroke-opacity: 1;
+  stroke: orange;
+}
+
+.line.isolated {
+  stroke: gray;
+  stroke-opacity: 1;
+}
