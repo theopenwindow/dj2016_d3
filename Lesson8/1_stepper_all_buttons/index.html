@@ -1,0 +1,63 @@
+
+<!-- code from http://vallandingham.me/stepper_steps.html -->
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>Dynamic Annotations in a Visualization Stepper</title>
+  <meta name="author" content="Jim Vallandingham">
+  <meta name="description" content="">
+
+  <!-- <link rel="stylesheet" href="css/reset.css"> -->
+  <link rel="stylesheet" href="css/stepper.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+  <script src="js/stepper.js"></script>
+</head>
+<body>
+  <div id="container">
+    <h1>Dynamic Annotations in a Visualization Stepper</h1>
+    <h2 class="subtitle">Example of using jQuery to switch between annotations for different steps of a visualization</h2>
+    <div id="vis-nav">
+      <button id="step1" class="step-link active">Step1</button>
+      <button id="step2" class="step-link">Step2</button>
+      <button id="step3" class="step-link">Step3</button>
+    </div>
+    <div id="vis-container">
+      <div id="annotation-steps">
+
+        <div class="annotation-step" id="step1-annotation" style="display:block;">
+          <div class="annotation" id="step1-left-annotation" >
+            <h4>Left Annotation Title</h4>
+            <p>Here is the annotation text for the <strong>left</strong> annotation of step 1</p>
+          </div>
+          <div class="annotation" id="step1-right-annotation" >
+            <h4>Right Annotation Title</h4>
+            <p>Here is the annotation text for the <strong>right</strong> annotation of step 1</p>
+          </div>
+        </div>
+
+        <div class="annotation-step" id="step2-annotation">
+          <div class="annotation" id="step2-center-annotation" >
+            <h4>Center Annotation Title</h4>
+            <p>Here is the annotation text for the center annotation of step 2.<br/> 
+              We are using absolute positioning of these divs</p>
+          </div>
+        </div>
+
+        <div class="annotation-step" id="step3-annotation">
+          <div class="annotation" id="step3-high-annotation" >
+            <h4>High Annotation Title</h4>
+            <p>This is text up high.</p>
+          </div>
+          <div class="annotation" id="step3-low-annotation" >
+            <h4>Low Annotation Title</h4>
+            <p>This is text down low.</p>
+          </div>
+        </div>
+        
+      </div>
+      <div id="vis-canvas"></div>
+    </div>
+  </div>
+</body>

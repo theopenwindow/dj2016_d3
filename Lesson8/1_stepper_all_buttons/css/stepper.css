@@ -1,0 +1,105 @@
+/* This is just to make things look a bit better */
+body {
+  font-size: 1.2em;
+}
+
+h2.subtitle {
+  font-size: 0.8em;
+  padding-left: 10px;
+  color: #666;
+}
+
+/* Basic styling for the step links */
+button.step-link {
+  padding: 5px;
+  background-color: #444;
+  color: #666;
+  text-decoration: none;
+}
+
+button.step-link:hover, button.active {
+  color: #ddd;
+}
+
+#container{
+  margin: auto;
+  padding-top: 20px;
+  width: 980px;
+}
+
+/* Here is our relatively positioned
+ * container div to hold the rest of the
+ * visualization */
+#vis-container {
+  position: relative;
+  width: 980px;
+  height: 700px;
+  margin-top: 10px;
+}
+
+/* All the .annotation-step divs are inside
+ * #annotation-steps. z-index ensures annotations
+ * stay on top of visualization. */
+#annotation-steps {
+  position: absolute;
+  z-index: 40;
+}
+
+#vis-nav {
+  z-index: 20;
+}
+
+/* This is where you would create the actual visualization.
+ * Right now, lets just change the background color. */
+#vis-canvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  overflow: hidden;
+  background-color: #eee;
+}
+
+/* By default, all annotation-steps are hidden. */
+.annotation-step {
+  position: absolute;
+  display: none;
+}
+
+/* Finally we can position each annotation exactly how
+ * we want. */
+.annotation {
+  position: absolute;
+}
+
+#step1-left-annotation {
+  left: 30px;
+  top: 120px;
+  width: 200px;
+}
+ 
+#step1-right-annotation {
+  left: 770px;
+  top: 120px;
+  width: 200px;
+}
+
+#step2-center-annotation {
+  left: 290px;
+  top: 40px;
+  width: 400px;
+  text-align: center;
+}
+
+#step3-high-annotation {
+  left: 50px;
+  top: 30px;
+  width: 200px;
+}
+
+#step3-low-annotation {
+  left: 730px;
+  top: 550px;
+  width: 200px;
+}
+
